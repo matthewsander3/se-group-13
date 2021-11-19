@@ -1,0 +1,22 @@
+[
+	{
+		"index": 0,
+		"username": "admin",
+		"password": "password",
+		"first_name": "Admin",
+		"last_name": "Account",
+		"email_address": "AdminAccount@gmail.com",
+		"phone_num": "123-465-7839",
+		"admin_status": 1
+	},
+	{
+		"index": 1,
+		"username": "TestUser",
+		"password": "password1",
+		"first_name": "Test",
+		"last_name": "User",
+		"email_address": "TestUser@gmail.com",
+		"phone_num": "123-465-7839",
+		"admin_status": 0
+	}
+]

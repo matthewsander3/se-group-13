@@ -1,0 +1,18 @@
+[
+	{
+		"user_index": 0,
+		"hotel_index": 0,
+		"num_rooms_reserved": 1,
+		"room_type_reserved": "Standard",
+		"in_date": {
+			"day": 1,
+			"month": 1,
+			"year": 2000
+		},
+		"out_date": {
+			"day": 5,
+			"month": 1,
+			"year": 2000
+		}
+	}
+]
