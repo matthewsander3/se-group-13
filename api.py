@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, render_template, make_response
+from flask import Flask, render_template, make_response, redirect
 from flask_restful import Api, Resource, abort, fields, reqparse
 
 import HotelHelpers as hp
@@ -12,7 +12,6 @@ app = Flask(__name__)
 api = Api(app)
 
 parser = reqparse.RequestParser()
-parser.add_argument('username', type=str)
 
 # HotelList
 # Shows all hotels
@@ -20,7 +19,7 @@ class HotelList(Resource):
     def get(self):
         output = []
         for hotel in hp.hotel_cache:
-            output.append(hotel.to_dict())
+            output.append(hp.hotel_to_dict(hotel))
         return output
 
 # Hotel
@@ -71,7 +70,7 @@ class HotelFilter(Resource):
             # otherwise continue the loop to next hotel.
             has_all_amenites = True
             for amenity in amenity_list:
-                if not amenity in hotel.amenities_list:
+                if amenity not in hotel.amenities_list:
                     has_all_amenites = False
 
             if not has_all_amenites:
@@ -86,7 +85,7 @@ class HotelFilter(Resource):
             if len(hotel.rooms_list) >= 1:
                 for room in hotel.rooms_list:
                     if room.type == room_type:
-                        returned_hotels.append(hotel.to_dict())
+                        returned_hotels.append(hp.hotel_to_dict(hotel))
                         break
 
             else:
@@ -130,46 +129,8 @@ class Customers(Resource):
         return True
 
 ## TODO ##
-#Registration endpoint
-class Registeration(Resource):
-    def put(self):
-        args = parser.parse_args()
-
-        username = args["username"]
-        password = args["password"]
-        first_name = args["first_name"]
-        last_name = args["last_name"]
-        email_address = args["email"]
-        phone_num = args["phone"]
-
-        return True
-    def get(self):
-        return "This is where you make an account"
-
-## TODO ##
-#login endpoint
-class Login(Resource):
-    def put(self):
-        args = parser.parse_args()
-
-        username = args["username"]
-        for reservation in rp.reservation_cache:
-            if reservation["username"] != username:
-                continue
-
-            #check if the password matches
-            if args["password"] != reservation["password"]:
-                return "Login failed!"
-
-        return "Login successful."
-
-    def get(self):
-        return "This is where you login"
-
-## TODO ##
 #create reservation endpoint
 class MakeReservation(Resource):
-
     def put(self):
         args = parser.parse_args()
         return True
@@ -179,7 +140,6 @@ class MakeReservation(Resource):
 ## TODO ##
 #view reservation endpoint
 class ViewReservation(Resource):
-
     def put(self):
         args = parser.parse_args()
         return True
@@ -201,16 +161,115 @@ class CancelReservation(Resource):
     def get(self):
         return "This is where you cancel reservations", 202
 
+# Login node.
+class Login(Resource):
+    def post(self):
+        parser.add_argument('username', type=str)
+        parser.add_argument('password', type=str)
+        args = parser.parse_args()
+
+        username = str(args["username"])
+        password = str(args["password"])
+
+        if len(username) < 1:
+            return "No username inputted!"
+        if len(password) < 1:
+            return "No password inputted!"
+
+        for user in up.user_cache:
+            if user.get_username() != username:
+                continue
+
+            #check if the password matches
+            if user.get_password() != password:
+                return "Incorrect password!"
+            up.active_user = user
+
+        if not up.active_user:
+            return "Username not found."
+
+        return redirect("hotels")
+
+    def get(self):
+        return make_response(render_template('login.html'), 200)
+
+# Make Account node.
+class MakeAccount(Resource):
+    def post(self):
+        parser.add_argument('fname', type=str)
+        parser.add_argument('lname', type=str)
+        parser.add_argument('email', type=str)
+        parser.add_argument('phone_num', type=str)
+        parser.add_argument('username', type=str)
+        parser.add_argument('password', type=str)
+        args = parser.parse_args()
+
+        f_name = str(args["fname"])
+        l_name = str(args["lname"])
+        email = str(args["email"])
+        phone_num = str(args["phone_num"])
+        username = str(args["username"])
+        password = str(args["password"])
+
+        if len(f_name) < 1:
+            return "No first name inputted!"
+        if len(l_name) < 1:
+            return "No last name inputted!"
+        if len(email) < 1:
+            return "No email inputted!"
+        if len(phone_num) < 1:
+            return "No phone number inputted!"
+        if len(username) < 1:
+            return "No username inputted!"
+        if len(password) < 1:
+            return "No password inputted!"
+
+        for user in up.user_cache:
+            if user.get_username() == username:
+                return "Username already exists!"
+
+        new_user = up.make_user(
+            username,
+            password,
+            f_name,
+            l_name,
+            email,
+            phone_num,
+            0
+        )
+
+        up.user_cache.append(new_user)
+        up.update_file_with_new_user()
+        up.active_user = new_user
+
+        return redirect("hotels")
+
+    def get(self):
+        return make_response(render_template('make_account.html'), 200)
+
+# Home page
 class Home(Resource):
     def post(self):
-        return 401
+        parser.add_argument('login', type=bool)
+        parser.add_argument('makeaccount', type=bool)
+        args = parser.parse_args()
+
+        if args['login']:
+            return redirect("login")
+        if args['makeaccount']:
+            return redirect("makeaccount")
+
+        return 404
+
     def get(self):
-        return make_response(render_template('home_page.html'))
+        return make_response(render_template('welcome.html'), 200)
 
 ##
 ##API Resource Routing here
 ##
 api.add_resource(Home,'/')
+api.add_resource(Login,'/login')
+api.add_resource(MakeAccount,'/makeaccount')
 api.add_resource(HotelList,'/hotels')
 api.add_resource(Hotel, '/hotels/index/<int:hotel_id>')
 api.add_resource(HotelSearch, '/hotels/search/<in_date>/<out_date>/<int:num_rooms>')

@@ -27,7 +27,7 @@ class Hotel:
         self.num_rooms = x
     def set_diff(self, x):
         self.diff = x
-    def set_numRooms(self, x):
+    def set_num_rooms(self, x):
         self.num_rooms = x
 
     #Getters
@@ -36,11 +36,11 @@ class Hotel:
     def get_name(self):
         return self.name
     def get_num_rooms(self):
-        return self.numRooms
+        return self.num_rooms
     def get_diff(self):
         return self.diff
-    def get_numRooms(self):
-        return self.numRooms
+    def get_num_rooms(self):
+        return self.num_rooms
 
     # Removes a certain room object from the rooms list.
     def remove_room(self, room):
