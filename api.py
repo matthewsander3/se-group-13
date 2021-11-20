@@ -20,13 +20,13 @@ class HotelList(Resource):
         output = []
         for hotel in hp.hotel_cache:
             output.append(hp.hotel_to_dict(hotel))
-        return output
+        return make_response(render_template('hotels.html', hotels=output), 200)
 
 # Hotel
 # shows a hotel by it's index
 class Hotel(Resource):
     def get(self, hotel_id):
-        return hp.find_list_index_of_hotel(hotel_id).to_dict()
+        return hp.hotel_to_dict(hp.find_list_index_of_hotel(hotel_id))
 
 ## TODO ##
 #queries hotels within a date range search parameter
@@ -35,10 +35,10 @@ class HotelSearch(Resource):
     def get(self, in_date, out_date, num_rooms):
         return True
 
-# Constant that determines how much to increase
-# the max price range of a room if
-# no valid rooms were found.
-NO_ROOMS_MAX_PRICE_INCREASE = 50
+# Constants that determine how much to increase or decrease
+# the price range of a room if no valid rooms were found.
+NO_ROOMS_MIN_PRICE_DECREASE = 25
+NO_ROOMS_MAX_PRICE_INCREASE = 25
 
 ## TODO ##
 # Input:
@@ -57,41 +57,42 @@ NO_ROOMS_MAX_PRICE_INCREASE = 50
 # then sees if there are any valid rooms again.
 
 class HotelFilter(Resource):
-    def get(self, hotel_list, amenity_list, room_type, price_range_low, price_range_high):
+    def post(self, price_range_low, price_range_high):
+        parser.add_argument('num_rooms', type=int)
+        parser.add_argument('room_type', type=str)
+        args = parser.parse_args()
 
-        # Get all hotels in the hotel list we were passed and convert them to objects.
-        returned_hotels = []
-        for hotel in hotel_list:
+        num_rooms = int(args["num_rooms"])
+        room_type = int(args["room_type"])
 
-            # Now we check for amenities.
-            # If all amenities in the passed list
-            # are found in our hotel's amenity list,
-            # then the hotel is valid -
-            # otherwise continue the loop to next hotel.
-            has_all_amenites = True
-            for amenity in amenity_list:
-                if amenity not in hotel.amenities_list:
-                    has_all_amenites = False
+        hotel_list = [] #TODO: This needs to be passed in.
+        amenity_list = [] #TODO: Ditto
 
-            if not has_all_amenites:
-                continue
+        # Check with our price range
+        returned_hotels = hp.find_certain_hotels(
+            hotel_list,
+            num_rooms,
+            amenity_list,
+            room_type,
+            price_range_low,
+            price_range_high
+        )
 
-            # Now we check for rooms.
-            # If we found no rooms, we need to re-query with a larger range.
-            if len(hotel.get_num_rooms()) < 1:
-                return True
+        # No price range? Try again with a bigger range
+        if len(returned_hotels) < 1:
+            returned_hotels = hp.find_certain_hotels(
+                hotel_list,
+                num_rooms,
+                amenity_list,
+                room_type,
+                price_range_low - NO_ROOMS_MIN_PRICE_DECREASE,
+                price_range_high + NO_ROOMS_MAX_PRICE_INCREASE
+            )
 
-            # If we have rooms now, we need to check that our roomtype is in there somewhere.
-            if len(hotel.rooms_list) >= 1:
-                for room in hotel.rooms_list:
-                    if room.type == room_type:
-                        returned_hotels.append(hp.hotel_to_dict(hotel))
-                        break
+        return returned_hotels if len(returned_hotels) > 0 else "No hotels found!"
 
-            else:
-                return None
-
-        return returned_hotels
+    def post(self):
+        pass
 
 ## TODO ##
 # Rooms
@@ -121,15 +122,20 @@ class RoomRange(Resource):
     def get(self, min, max):
         return True
 
-## TODO ##
 # Customers
 # Shows all customers
 class Customers(Resource):
     def get(self):
-        return True
+        if not up.check_if_active_user_is_admin():
+            abort(401, message = "This page is for admins only!")
+
+        output = []
+        for user in up.user_cache:
+            output.append(up.user_to_dict(user))
+        return output
 
 ## TODO ##
-#create reservation endpoint
+# Create reservation endpoint
 class MakeReservation(Resource):
     def put(self):
         args = parser.parse_args()
@@ -138,7 +144,7 @@ class MakeReservation(Resource):
         return "This is where you make a reservation"
 
 ## TODO ##
-#view reservation endpoint
+# View reservation endpoint
 class ViewReservation(Resource):
     def put(self):
         args = parser.parse_args()
@@ -148,7 +154,7 @@ class ViewReservation(Resource):
 
 
 ## TODO ##
-#cancel reservation endpoint
+# Cancel reservation endpoint
 class CancelReservation(Resource):
     def put(self):
         # Passed a user index and a hotel index.
@@ -176,22 +182,20 @@ class Login(Resource):
         if len(password) < 1:
             return "No password inputted!"
 
-        for user in up.user_cache:
-            if user.get_username() != username:
-                continue
-
-            #check if the password matches
-            if user.get_password() != password:
-                return "Incorrect password!"
-            up.active_user = user
-
-        if not up.active_user:
-            return "Username not found."
+        if not up.login(username, password):
+            return "Login failed! Username or password incorrect."
 
         return redirect("hotels")
 
     def get(self):
         return make_response(render_template('login.html'), 200)
+
+# Wrapper for logging out of a user account.
+# use in a resource by invoking it like so:
+# `return logout_wrapper()`
+def logout_wrapper():
+    up.logout()
+    return make_response(render_template('login.html'), 200)
 
 # Make Account node.
 class MakeAccount(Resource):
@@ -262,7 +266,7 @@ class Home(Resource):
         return 404
 
     def get(self):
-        return make_response(render_template('welcome.html'), 200)
+        return make_response(render_template('welcome.html'), 200,)
 
 ##
 ##API Resource Routing here
@@ -270,10 +274,11 @@ class Home(Resource):
 api.add_resource(Home,'/')
 api.add_resource(Login,'/login')
 api.add_resource(MakeAccount,'/makeaccount')
+
 api.add_resource(HotelList,'/hotels')
 api.add_resource(Hotel, '/hotels/index/<int:hotel_id>')
-api.add_resource(HotelSearch, '/hotels/search/<in_date>/<out_date>/<int:num_rooms>')
-api.add_resource(HotelFilter, '/hotels/search/filter/<room_type>/<int:price_range_low>/<int:price_range_high>')
+api.add_resource(HotelSearch, '/hotels/search')
+api.add_resource(HotelFilter, '/hotels/search/<int:price_range_low>/<int:price_range_high>')
 #api.add_resource(Rooms, "/rooms")
 #api.add_resource(RoomIndex, '/rooms/index/<int:room_id>')
 #api.add_resource(RoomMax, '/rooms/list/<int:max>')

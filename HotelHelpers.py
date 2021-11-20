@@ -44,3 +44,38 @@ def find_list_index_of_hotel(index):
 			return hotel
 
 	return None
+
+def is_amenity_in_hotel(amenity, hotel):
+	return amenity in hotel.get_amenity_list()
+
+
+def find_certain_hotels(hotel_list, num_rooms, amenity_list, room_type, price_range_low, price_range_high):
+
+    # Get all hotels in the hotel list we were passed and convert them to objects.
+    returned_hotels = []
+    for hotel in hotel_list:
+
+        # Now we check for amenities.
+        # If all amenities in the passed list are found in our hotel's amenity list,
+        # then the hotel is valid - otherwise continue the loop to next hotel.
+        has_all_amenites = True
+        for amenity in amenity_list:
+            if not is_amenity_in_hotel(amenity, hotel):
+                has_all_amenites = False
+
+        if not has_all_amenites:
+            continue
+
+        # Now we check for rooms.
+        if len(hotel.get_num_rooms()) < 1:
+            continue
+
+        # If we have a valid hotel now, we need to check that it holds our room_type.
+        our_rooms = hotel.get_rooms_dict()
+        if room_type not in our_rooms:
+            continue
+
+        if our_rooms[room_type] >= num_rooms:
+            returned_hotels.append(hotel_to_dict(hotel))
+
+    return returned_hotels

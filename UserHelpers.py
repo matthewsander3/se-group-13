@@ -65,3 +65,25 @@ def update_file_with_new_user():
 	json.dump(data, user_file, indent = 2)
 
 	user_file.close()
+
+
+def login(username, password):
+    for user in user_cache:
+        if user.get_username() != username:
+            continue
+
+        #check if the password matches
+        if user.get_password() != password:
+            return False
+        active_user = user
+
+    return active_user
+
+def logout():
+	active_user = None
+
+def check_if_user_is_admin(user):
+	return user.get_admin_status()
+
+def check_if_active_user_is_admin():
+	return active_user.get_admin_status()
