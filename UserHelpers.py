@@ -79,7 +79,6 @@ def login(username, password):
             return False
 
         set_active_user(user.get_index())
-        print("Active user is now " + user.get_username())
 
     return True
 
