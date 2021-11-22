@@ -5,7 +5,7 @@
 </head>
 
 <body>
-  <h1>All Hotels:</h1>
+  <h1>{{ top_text }}</h1>
   {% for hotel in hotels %}
     <div id={{ hotel.name }}>
       <p>
@@ -14,8 +14,8 @@
         <li>&nbsp;&nbsp;Weekend Differential: ${{ hotel.weekend_differential }}</li>
         <li>&nbsp;&nbsp;Has:&nbsp;{{ hotel.amenity_list|join(', ') }}</li>
         <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Standard %}Standard rooms: ${{ hotel.rooms_dict.Standard }} {%endif%}</li>
-        <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Queen %}Standard rooms: ${{ hotel.rooms_dict.Queen }} {%endif%}</li>
-        <li>&nbsp;&nbsp;{% if hotel.rooms_dict.King %}Standard rooms: ${{ hotel.rooms_dict.King }} {%endif%}</li>
+        <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Queen %}Queen rooms: ${{ hotel.rooms_dict.Queen }} {%endif%}</li>
+        <li>&nbsp;&nbsp;{% if hotel.rooms_dict.King %}King rooms: ${{ hotel.rooms_dict.King }} {%endif%}</li>
       </p>
     </div>
   {% endfor %}

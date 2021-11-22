@@ -1,152 +1,152 @@
 [
-	{
-		"index": 0,
-		"name": "The Magnolia All Suites",
-		"room_num": 20,
-		"weekend_diff": 25,
-		"room_types": {
-			"Standard": 100,
-			"Queen": 150,
-			"King": 250
-		},
-		"amenities": [
-			"Pool",
-			"Gym",
-			"Spa",
-			"Business Office"
-		]
-	},
-	{
-		"index": 1,
-		"name": "The Lofts at Town Centre",
-		"room_num": 60,
-		"weekend_diff": 35,
-		"room_types": {
-			"Standard": 105,
-			"Queen": 120,
-			"King": 190
-		},
-		"amenities": [
-			"Pool",
-			"Gym",
-			"Spa",
-			"Business Office"
-		]
-	},
-	{
-		"index": 2,
-		"name": "Park North Hotel",
-		"room_num": 100,
-		"weekend_diff": 15,
-		"room_types": {
-			"Standard": 50,
-			"Queen": 75,
-			"King": 90
-		},
-		"amenities": [
-			"Pool",
-			"Gym"
-		]
-	},
-	{
-		"index": 3,
-		"name": "The Courtyard Suites",
-		"room_num": 20,
-		"weekend_diff": 25,
-		"room_types": {
-			"Standard": 100,
-			"Queen": 150,
-			"King": 250
-		},
-		"amenities": [
-			"Pool",
-			"Gym",
-			"Spa",
-			"Business Office"
-		]
-	},
-	{
-		"index": 4,
-		"name": "The Regency Rooms",
-		"room_num": 20,
-		"weekend_diff": 25,
-		"room_types": {
-			"Standard": 100,
-			"Queen": 150,
-			"King": 250
-		},
-		"amenities": [
-			"Pool",
-			"Gym",
-			"Spa",
-			"Business Office"
-		]
-	},
-	{
-		"index": 5,
-		"name": "Town Inn Budget Rooms",
-		"room_num": 150,
-		"weekend_diff": 15,
-		"room_types": {
-			"Standard": 25,
-			"Queen": 50,
-			"King": 60
-		},
-		"amenities": [
-			"Pool"
-		]
-	},
-	{
-		"index": 6,
-		"name": "The Comfy Motel Place",
-		"room_num": 50,
-		"weekend_diff": 10,
-		"room_types": {
-			"Standard": 30,
-			"Queen": 50
-		},
-		"amenities": []
-	},
-	{
-		"index": 7,
-		"name": "Sun Palace Inn",
-		"room_num": 50,
-		"weekend_diff": 25,
-		"room_types": {
-			"Standard": 40,
-			"Queen": 60,
-			"King": 80
-		},
-		"amenities": [
-			"Pool",
-			"Gym"
-		]
-	},
-	{
-		"index": 8,
-		"name": "HomeAway Inn",
-		"room_num": 30,
-		"weekend_diff": 25,
-		"room_types": {
-			"Standard": 50
-		},
-		"amenities": [
-			"Pool",
-			"Business Office"
-		]
-	},
-	{
-		"index": 9,
-		"name": "Rio Inn",
-		"room_num": 50,
-		"weekend_diff": 25,
-		"room_types": {
-			"Standard": 25,
-			"Queen": 65,
-			"King": 89
-		},
-		"amenities": [
-			"Pool"
-		]
-	}
+    {
+        "index": 0,
+        "name": "The Magnolia All Suites",
+        "room_num": 20,
+        "weekend_diff": 25,
+        "room_types": {
+            "Standard": 100,
+            "Queen": 150,
+            "King": 250
+        },
+        "amenities": [
+            "Pool",
+            "Gym",
+            "Spa",
+            "Business Office"
+        ]
+    },
+    {
+        "index": 1,
+        "name": "The Lofts at Town Centre",
+        "room_num": 60,
+        "weekend_diff": 35,
+        "room_types": {
+            "Standard": 105,
+            "Queen": 120,
+            "King": 190
+        },
+        "amenities": [
+            "Pool",
+            "Gym",
+            "Spa",
+            "Business Office"
+        ]
+    },
+    {
+        "index": 2,
+        "name": "Park North Hotel",
+        "room_num": 100,
+        "weekend_diff": 15,
+        "room_types": {
+            "Standard": 50,
+            "Queen": 75,
+            "King": 90
+        },
+        "amenities": [
+            "Pool",
+            "Gym"
+        ]
+    },
+    {
+        "index": 3,
+        "name": "The Courtyard Suites",
+        "room_num": 20,
+        "weekend_diff": 25,
+        "room_types": {
+            "Standard": 100,
+            "Queen": 150,
+            "King": 250
+        },
+        "amenities": [
+            "Pool",
+            "Gym",
+            "Spa",
+            "Business Office"
+        ]
+    },
+    {
+        "index": 4,
+        "name": "The Regency Rooms",
+        "room_num": 20,
+        "weekend_diff": 25,
+        "room_types": {
+            "Standard": 100,
+            "Queen": 150,
+            "King": 250
+        },
+        "amenities": [
+            "Pool",
+            "Gym",
+            "Spa",
+            "Business Office"
+        ]
+    },
+    {
+        "index": 5,
+        "name": "Town Inn Budget Rooms",
+        "room_num": 150,
+        "weekend_diff": 15,
+        "room_types": {
+            "Standard": 25,
+            "Queen": 50,
+            "King": 60
+        },
+        "amenities": [
+            "Pool"
+        ]
+    },
+    {
+        "index": 6,
+        "name": "The Comfy Motel Place",
+        "room_num": 50,
+        "weekend_diff": 10,
+        "room_types": {
+            "Standard": 30,
+            "Queen": 50
+        },
+        "amenities": []
+    },
+    {
+        "index": 7,
+        "name": "Sun Palace Inn",
+        "room_num": 50,
+        "weekend_diff": 25,
+        "room_types": {
+            "Standard": 40,
+            "Queen": 60,
+            "King": 80
+        },
+        "amenities": [
+            "Pool",
+            "Gym"
+        ]
+    },
+    {
+        "index": 8,
+        "name": "HomeAway Inn",
+        "room_num": 30,
+        "weekend_diff": 25,
+        "room_types": {
+            "Standard": 50
+        },
+        "amenities": [
+            "Pool",
+            "Business Office"
+        ]
+    },
+    {
+        "index": 9,
+        "name": "Rio Inn",
+        "room_num": 50,
+        "weekend_diff": 25,
+        "room_types": {
+            "Standard": 25,
+            "Queen": 65,
+            "King": 89
+        },
+        "amenities": [
+            "Pool"
+        ]
+    }
 ]

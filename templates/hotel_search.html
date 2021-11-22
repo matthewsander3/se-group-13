@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Show Hotels</title>
+</head>
+
+<body>
+  <h1>Search hotels:</h1>
+  <form method="post">
+    <label for="in_year">Start Year:</label><br>
+    <input type="int" id="in_year" name="in_year"><br><br>
+
+    <label for="in_month">Start Month:</label><br>
+    <input type="int" id="in_month" name="in_month"><br><br>
+
+    <label for="in_day">Start Day:</label><br>
+    <input type="int" id="in_day" name="in_day"><br><br>
+
+    <label for="out_year">End Year:</label><br>
+    <input type="int" id="out_year" name="out_year"><br><br>
+
+    <label for="out_month">End Month:</label><br>
+    <input type="int" id="out_month" name="out_month"><br><br>
+
+    <label for="out_day">End Day:</label><br>
+    <input type="int" id="out_day" name="out_day"><br><br>
+
+    <label for="num_rooms">Number of Desired Rooms:</label><br>
+    <input type="int" id="num_rooms" name="num_rooms"><br><br>
+
+    <label for="room_type">Desired Room Type:</label><br>
+    <select name="room_type" id="room_type">
+      <option value="Standard">Standard</option>
+      <option value="Queen">Queen</option>
+      <option value="King">King</option>
+    </select>
+
+    <input type="submit" value="Submit">
+  </form>
+
+</body>
+</html>

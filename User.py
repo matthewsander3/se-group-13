@@ -11,6 +11,8 @@ class User:
         self.phone_num = phone_num
         self.admin_status = bool(admin_status)
 
+    def get_index(self):
+        return self.index
     def get_username(self):
         return self.username
     def get_password(self):
@@ -29,7 +31,7 @@ class User:
     def to_dict(self):
         return_dict = {}
 
-        return_dict["index"] = self.index
+        return_dict["index"] = self.get_index()
         return_dict["username"] = self.get_username()
         return_dict["password"] = self.get_password()
         return_dict["first_name"] = self.get_f_name()
