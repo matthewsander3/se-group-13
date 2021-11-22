@@ -27,7 +27,7 @@ class Hotel:
         self.num_rooms = x
     def set_diff(self, x):
         self.diff = x
-    def set_numRooms(self, x):
+    def set_num_rooms(self, x):
         self.num_rooms = x
 
     #Getters
@@ -36,18 +36,16 @@ class Hotel:
     def get_name(self):
         return self.name
     def get_num_rooms(self):
-        return self.numRooms
+        return self.num_rooms
     def get_diff(self):
         return self.diff
-    def get_numRooms(self):
-        return self.numRooms
+    def get_num_rooms(self):
+        return self.num_rooms
 
-    # Removes a certain room object from the rooms list.
-    def remove_room(self, room):
-        self.rooms_list.remove(room)
-    # Removes a certain amenity from the amenities list.
-    def remove_amenity(self, amenity):
-        self.amenities_list.remove(amenity)
+    def get_rooms_dict(self):
+        return self.rooms_dict
+    def get_amenities_lists(self):
+        return self.amenities_list
 
     # Turns a hotel object back into a dict for database use.
     def to_dict(self):
@@ -57,6 +55,8 @@ class Hotel:
         return_dict["name"] = self.get_name()
         return_dict["rooms"] = self.get_num_rooms()
         return_dict["weekend_differential"] = self.get_diff()
+        return_dict["rooms_dict"] = self.get_rooms_dict()
+        return_dict["amenity_list"] = self.get_amenities_lists()
 
         return return_dict
 
