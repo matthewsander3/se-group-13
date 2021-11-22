@@ -77,7 +77,7 @@ class HotelSearch(Resource):
         output = []
 
         for hotel in hp.hotel_cache:
-            if not args["room_type"] in hotel.get_rooms_dict():
+            if args["room_type"] not in hotel.get_rooms_dict():
                 continue
 
             final_room_num = hotel.get_num_rooms()
