@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Home page</title>
+</head>
+<body>
+
+<form method="post">
+  <input type="submit" id="logout" name="logout" value="Logout">
+  <input type="submit" id="home" name="home" value="Home">
+</form>
+
+<h1>Welcome, {{user.username}}!{% if user.admin_status %} (Admin view) {% endif %}</h1>
+<form method="post">
+  <input type="submit" id="viewhotels" name="viewhotels" value="View Hotels">
+  <input type="submit" id="searchhotels" name="searchhotels" value="Search Hotels">
+  <input type="submit" id="viewreservations" name="viewreservations" value="View Reservations">
+  {% if user.admin_status %}
+    <input type="submit" id="customers" name="customers" value="Customers">
+  {% endif %}
+</form>
+
+</body>
+</html>

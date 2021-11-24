@@ -9,14 +9,24 @@ reservation_cache = []
 # > Returns a Reservation object.
 def dict_to_reservation(reserve_dict):
 
+    index = len(reservation_cache)
     user_index = reserve_dict["user_index"] #Integer
     hotel_index = reserve_dict["hotel_index"] #Integer
     num_rooms_reserved = reserve_dict["num_rooms_reserved"] #Integer
     room_type_reserved = reserve_dict["room_type_reserved"] #String
-    in_date = dt.date(reserve_dict["in_date"]["year"], reserve_dict["in_date"]["month"], reserve_dict["in_date"]["day"])
-    out_date = dt.date(reserve_dict["out_date"]["year"], reserve_dict["out_date"]["month"], reserve_dict["out_date"]["day"])
+    in_date = dt.date(
+        reserve_dict["in_date"]["year"],
+        reserve_dict["in_date"]["month"],
+        reserve_dict["in_date"]["day"]
+        )
+    out_date = dt.date(
+        reserve_dict["out_date"]["year"],
+        reserve_dict["out_date"]["month"],
+        reserve_dict["out_date"]["day"]
+        )
 
     return Reservation.Reservation(
+        index,
         user_index,
         hotel_index,
         num_rooms_reserved,
@@ -36,6 +46,13 @@ def reservation_to_dict(reservation):
 def reservations_to_list(reservation_list):
     for reservation in reservation_list:
         reservation_cache.append(dict_to_reservation(reservation))
+
+def find_reservation_by_index(index):
+    for reservation in reservation_cache:
+        if reservation.get_index() == index:
+            return reservation
+
+    return None
 
 # Finds all reservations in the list that belong
 # to a certain hotel index.
@@ -65,7 +82,7 @@ def update_file_with_new_reservations():
     for reserve in reservation_cache:
         data.append(reservation_to_dict(reserve))
 
-    reservation_file = open("users.json", "w")
+    reservation_file = open("reservations.json", "w")
     json.dump(data, reservation_file, indent = 2)
 
     reservation_file.close()

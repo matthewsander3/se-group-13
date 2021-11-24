@@ -18,17 +18,26 @@ parser = reqparse.RequestParser()
 # HotelList Endpoint (/hotels)
 # Shows all hotels. Takes in no arguments.
 class HotelList(Resource):
+    def post(self):
+        if logout_post():
+            return logout_wrapper()
+
+        if home_post():
+            return home_wrapper()
+
+        return self.get()
+
     def get(self):
         output = []
         for hotel in hp.hotel_cache:
             output.append(hp.hotel_to_dict(hotel))
         return make_response(render_template('hotels.html', top_text="All Hotels", hotels=output), 200)
 
-# Hotel (/hotels/index/[integer])
+# Hotel (/hotels/[integer])
 # Shows the hotel at the given index in the URL. Takes no arguments.
 class Hotel(Resource):
     def get(self, hotel_id):
-        output = [hp.hotel_to_dict(hp.find_list_index_of_hotel(hotel_id))]
+        output = [hp.hotel_to_dict(hp.find_hotel_by_index(hotel_id))]
 
         if len(output) < 1:
             return "No hotels found at index " + str(hotel_id) + "!"
@@ -45,6 +54,12 @@ class Hotel(Resource):
 # - required - room_type
 class HotelSearch(Resource):
     def post(self):
+        if logout_post():
+            return logout_wrapper()
+
+        if home_post():
+            return home_wrapper()
+
         parser.add_argument('in_year', type=int)
         parser.add_argument('in_month', type=int)
         parser.add_argument('in_day', type=int)
@@ -145,8 +160,6 @@ class HotelFilter(Resource):
 
         return returned_hotels if len(returned_hotels) > 0 else "No hotels found!"
 
-    def post(self):
-        pass
 
 # Customers (/admin/customers)
 # Shows all users, only available to admins.
@@ -179,15 +192,48 @@ class MakeReservation(Resource):
 ## TODO ##
 # View reservation endpoint
 class ViewReservation(Resource):
+    # Cancel reservations.
     def post(self):
+        if logout_post():
+            return logout_wrapper()
+
+        if home_post():
+            return home_wrapper()
+
+        parser.add_argument('cancel', type=bool)
+        args = parser.parse_args()
+
+        if args["cancel"]:
+            removed_reservation = rp.find_reservation_by_index(0) # TODO: Hardcoded 1st
+            if removed_reservation is not None:
+                rp.reservation_cache.remove(removed_reservation)
+                rp.update_file_with_new_reservations()
+
+        return self.get()
+
+    # View reservations.
+    def get(self):
         if not is_logged_in():
             return please_login_alert()
 
-        args = parser.parse_args()
-        return True
-    def get(self):
-        return "This is where you make a reservation"
+        is_admin = is_admin_logged_in()
 
+        output = []
+        for reservation in rp.reservation_cache:
+            # Admins will see all reservations that are made
+            if not is_admin:
+                if reservation.get_user_index() != up.active_user_index:
+                    continue
+
+            reserved_hotel = hp.find_hotel_by_index(reservation.get_hotel_index())
+
+            reservation_info = rp.reservation_to_dict(reservation)
+            reservation_info["in_date_string"] = reservation.get_in_date_string()
+            reservation_info["out_date_string"] = reservation.get_out_date_string()
+            reservation_info["hotel_info"] = hp.hotel_to_dict(reserved_hotel)
+            output.append(reservation_info)
+
+        return make_response(render_template('reservations.html', reservations=output, admin=is_admin), 200)
 
 ## TODO ##
 # Cancel reservation endpoint
@@ -235,10 +281,19 @@ class Login(Resource):
             flash("Login failed! Uername or password incorrect.")
             return
 
-        return redirect("/hotels")
+        return redirect("/home")
 
     def get(self):
         return make_response(render_template('login.html'), 200)
+
+def logout_post():
+    parser.add_argument('logout', type=bool)
+    args = parser.parse_args()
+
+    if args["logout"]:
+        return True
+
+    return False
 
 # Wrapper for logging out of a user account.
 # use in a resource by invoking it like so:
@@ -246,6 +301,18 @@ class Login(Resource):
 def logout_wrapper():
     up.logout()
     return redirect("/login")
+
+def home_post():
+    parser.add_argument('home', type=bool)
+    args = parser.parse_args()
+
+    if args["home"]:
+        return True
+
+    return False
+
+def home_wrapper():
+    return redirect("/home")
 
 # Checks if the current user is an admin.
 # Returns TRUE if so, FALSE if there is no current user
@@ -322,14 +389,17 @@ class MakeAccount(Resource):
         up.update_file_with_new_user()
         up.active_user_index = up.user_cache.index(new_user)
 
-        return redirect("/hotels")
+        return redirect("/home")
 
     def get(self):
+        if is_logged_in():
+            redirect("/home")
+
         return make_response(render_template('make_account.html'), 200)
 
 # Home page (/)
 # Simple, buttons to either login or make an account
-class Home(Resource):
+class Welcome(Resource):
     def post(self):
         parser.add_argument('login', type=bool)
         parser.add_argument('makeaccount', type=bool)
@@ -345,19 +415,52 @@ class Home(Resource):
     def get(self):
         return make_response(render_template('welcome.html'), 200,)
 
+class Home(Resource):
+    def post(self):
+        if not is_logged_in():
+            return please_login_alert()
+
+        parser.add_argument('viewhotels', type=bool)
+        parser.add_argument('searchhotels', type=bool)
+        parser.add_argument('viewreservations', type=bool)
+        parser.add_argument('customers', type=bool)
+        args = parser.parse_args()
+
+        if args['viewhotels']:
+            return redirect("/hotels")
+        if args['searchhotels']:
+            return redirect("/hotels/search")
+        if args['viewreservations']:
+            return redirect("/reservations")
+
+        if args['customers']:
+            if not is_admin_logged_in():
+                return admin_only_alert()
+
+            return redirect("/admin/customers")
+
+        return 404
+
+    def get(self):
+        if not is_logged_in():
+            return please_login_alert()
+
+        curr_user = up.user_to_dict(up.find_user_by_index(up.active_user_index))
+        return make_response(render_template('home.html', user=curr_user), 200)
+
 # API Resource Routing here
 #
-api.add_resource(Home,'/')
+api.add_resource(Welcome,'/')
+api.add_resource(Home,'/home')
 api.add_resource(Login,'/login')
 api.add_resource(MakeAccount,'/makeaccount')
 api.add_resource(HotelList,'/hotels')
-api.add_resource(Hotel, '/hotels/index/<int:hotel_id>')
+api.add_resource(Hotel, '/hotels/<int:hotel_id>')
 api.add_resource(HotelSearch, '/hotels/search')
+api.add_resource(MakeReservation, '/hotels/<int:hotel_id>/reserve')
+api.add_resource(ViewReservation, '/reservations')
 api.add_resource(HotelFilter, '/hotels/search/<int:price_range_low>/<int:price_range_high>')
 api.add_resource(Customers, '/admin/customers')
-api.add_resource(MakeReservation, '/reservations/make')
-api.add_resource(ViewReservation, '/reservations/view')
-api.add_resource(CancelReservation, '/reservations/cancel')
 
 # Initialize all hotels from the json
 def init_hotels(json_data):

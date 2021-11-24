@@ -55,6 +55,13 @@ def users_to_list(user_list):
     for user in user_list:
         user_cache.append(dict_to_user(user))
 
+def find_user_by_index(index):
+    for user in user_cache:
+        if user.get_index() == index:
+            return user
+
+    return None
+
 # Updates the userfile to the current user cache.
 def update_file_with_new_user():
     data = []
