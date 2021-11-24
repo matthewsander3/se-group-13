@@ -38,7 +38,7 @@ def hotels_to_list(hotel_list):
 # The list index of the hotel may not always equal the hotel index,
 # so this ensures you always access the correct hotel.
 # > Returns the hotel found, or null/none if it found no hotel.
-def find_list_index_of_hotel(index):
+def find_hotel_by_index(index):
     for hotel in hotel_cache:
         if hotel.get_index() == index:
             return hotel

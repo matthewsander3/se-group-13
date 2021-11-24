@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reservations</title>
+</head>
+
+<body>
+
+  <form method="post">
+    <input type="submit" id="logout" name="logout" value="Logout">
+    <input type="submit" id="home" name="home" value="Home">
+  </form>
+
+  <h1>Reservations{% if admin %} (Admin view) {% endif %}</h1>
+    <div>
+      {% if reservations|length >= 1 %}
+        {% for reservation in reservations %}
+          <div>
+            <p>
+              <li>Reservation{{ reservation.index }} for{{ reservation.hotel_info.name }}</li>
+              <li>Starts: {{ reservation.in_date_string }}</li>
+              <li>Ends: {{ reservation.out_date_string }}</li>
+
+              <form method="post">
+                <input type="submit" id="cancel" name="cancel" value="Cancel?">
+              </form>
+
+            </p>
+          </div>
+        {% endfor %}
+      {% else %}
+        You have no reservations - book today!
+      {%endif%}
+    </div>
+</body>
+</html>
