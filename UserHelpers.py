@@ -6,7 +6,16 @@ active_user_index = -1
 
 # Makes a new user object with all passed parameters.
 # > Returns a user object.
-def make_user(username, password, first_name, last_name, email_address, phone_num, admin_status):
+def make_user(
+        username: str,
+        password: str,
+        first_name: str,
+        last_name: str,
+        email_address: str,
+        phone_num: str,
+        admin_status: bool
+        ) -> User:
+
     return User.User(
         len(user_cache),
         username,
@@ -21,7 +30,7 @@ def make_user(username, password, first_name, last_name, email_address, phone_nu
 # Take a dictionariy representing a user
 # and translates it to a user object.
 # > Returns a user object.
-def dict_to_user(user_dict):
+def dict_to_user(user_dict: dict) -> User:
 
     index = user_dict["index"]
     username = user_dict["username"]
@@ -45,17 +54,17 @@ def dict_to_user(user_dict):
 
 # Takes a user object and converts it to a dictionary.
 # > Returns a dictionary.
-def user_to_dict(user):
+def user_to_dict(user: User):
     return user.to_dict()
 
 # Takes a list of user dictionaries,
 # makes them into user objects,
 # and appends them to the global user list.
-def users_to_list(user_list):
+def users_to_list(user_list: list):
     for user in user_list:
         user_cache.append(dict_to_user(user))
 
-def find_user_by_index(index):
+def find_user_by_index(index: int) -> User or None:
     for user in user_cache:
         if user.get_index() == index:
             return user
@@ -73,8 +82,7 @@ def update_file_with_new_user():
 
     user_file.close()
 
-
-def login(username, password):
+def login(username: str, password: str) -> bool:
     global active_user_index
 
     for user in user_cache:
@@ -92,14 +100,14 @@ def login(username, password):
 def logout():
     set_active_user(-1)
 
-def set_active_user(new_index):
+def set_active_user(new_index: int):
     global active_user_index
     active_user_index = new_index
 
-def check_if_user_is_admin(user):
+def check_if_user_is_admin(user: User) -> bool:
     return user.get_admin_status()
 
-def check_if_active_user_is_admin():
+def check_if_active_user_is_admin() -> bool:
     for user in user_cache:
         if user.get_index() == active_user_index:
             return user.get_admin_status()

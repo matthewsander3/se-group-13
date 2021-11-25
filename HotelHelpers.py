@@ -1,11 +1,13 @@
+from datetime import date
 import Hotel
+import ReservationHelpers as rp
 
 hotel_cache = []
 
 # When passed a dictionary of hotel information
 # Translates it into a Hotel object.
 # > Returns a hotel object.
-def dict_to_hotel(hotel_dict):
+def dict_to_hotel(hotel_dict: dict) -> Hotel:
 
     index = hotel_dict["index"] #Integer
     name = hotel_dict["name"] #String
@@ -25,12 +27,12 @@ def dict_to_hotel(hotel_dict):
 
 # When passed a hotel object
 # Translates it into a dict
-def hotel_to_dict(hotel):
+def hotel_to_dict(hotel: Hotel):
     return hotel.to_dict()
 
 # Takes a list of hotel dictionaries,
 # makes them into hotel objects, and appends them to the global hotel list.
-def hotels_to_list(hotel_list):
+def hotels_to_list(hotel_list: list):
     for hotel in hotel_list:
         hotel_cache.append(dict_to_hotel(hotel))
 
@@ -38,44 +40,59 @@ def hotels_to_list(hotel_list):
 # The list index of the hotel may not always equal the hotel index,
 # so this ensures you always access the correct hotel.
 # > Returns the hotel found, or null/none if it found no hotel.
-def find_hotel_by_index(index):
+def find_hotel_by_index(index: int) -> Hotel or None:
     for hotel in hotel_cache:
         if hotel.get_index() == index:
             return hotel
 
     return None
 
-def is_amenity_in_hotel(amenity, hotel):
-    return amenity in hotel.get_amenity_list()
+def find_certain_hotels(
+        room_type: str,
+        num_rooms: int,
+        req_amenities: dict,
+        in_date: date,
+        out_date: date,
+        price_range_min: int,
+        price_range_max: int
+        ) -> list:
 
-
-def find_certain_hotels(hotel_list, num_rooms, amenity_list, room_type, price_range_low, price_range_high):
-
-    # Get all hotels in the hotel list we were passed and convert them to objects.
-    returned_hotels = []
-    for hotel in hotel_list:
-
-        # Now we check for amenities.
-        # If all amenities in the passed list are found in our hotel's amenity list,
-        # then the hotel is valid - otherwise continue the loop to next hotel.
-        has_all_amenites = True
-        for amenity in amenity_list:
-            if not is_amenity_in_hotel(amenity, hotel):
-                has_all_amenites = False
-
-        if not has_all_amenites:
+    output = []
+    for hotel in hotel_cache:
+        rooms = hotel.get_rooms_dict()
+        if room_type not in rooms:
             continue
 
-        # Now we check for rooms.
-        if len(hotel.get_num_rooms()) < 1:
-            continue
+        has_enough_rooms = False
+        final_room_num = hotel.get_num_rooms()
+        # Loop through every reservation we have.
+        for reservation in rp.reservation_cache:
+            if reservation.get_hotel_index() != hotel.get_index():
+                continue
 
-        # If we have a valid hotel now, we need to check that it holds our room_type.
-        our_rooms = hotel.get_rooms_dict()
-        if room_type not in our_rooms:
-            continue
+            # If the current reservation falls outside of the date specified, we don't need to care
+            if in_date < reservation.get_in_date() and out_date > reservation.get_out_date():
+                continue
 
-        if our_rooms[room_type] >= num_rooms:
-            returned_hotels.append(hotel_to_dict(hotel))
+            final_room_num = final_room_num - reservation.get_num_rooms_reserved()
+        if final_room_num >= num_rooms:
+            has_enough_rooms = True
 
-    return returned_hotels
+        # Check that any room type is in our price range
+        is_affordabale = False
+        if rooms[room_type] <= price_range_max and rooms[room_type] >= price_range_min:
+            is_affordabale = True
+
+        # Check that it has all the amenities we want
+        has_amenities = True
+        for amenity in req_amenities:
+            if not req_amenities[amenity]: #We don't want this amenity
+                continue
+            if amenity not in hotel.get_amenities_lists(): #We don't have an amenity we want
+                has_amenities = False
+
+        # If the number of available rooms less than the specified number of rooms, don't show the hotel
+        if is_affordabale and has_amenities and has_enough_rooms:
+            output.append(hotel_to_dict(hotel))
+
+    return output

@@ -7,7 +7,7 @@ reservation_cache = []
 # When passed a dictionary of reservation info
 # Translates it into a Reservation object.
 # > Returns a Reservation object.
-def dict_to_reservation(reserve_dict):
+def dict_to_reservation(reserve_dict: dict):
 
     index = len(reservation_cache)
     user_index = reserve_dict["user_index"] #Integer
@@ -37,17 +37,17 @@ def dict_to_reservation(reserve_dict):
 
 # When passed a Reservation, converts it to a dictionary.
 # > Returns a dict.
-def reservation_to_dict(reservation):
+def reservation_to_dict(reservation: Reservation):
     return reservation.to_dict()
 
 # Takes a list of Reservation dictionaries,
 # makes them into Reservation objects,
 # and appends them to the global Reservation list.
-def reservations_to_list(reservation_list):
+def reservations_to_list(reservation_list: list):
     for reservation in reservation_list:
         reservation_cache.append(dict_to_reservation(reservation))
 
-def find_reservation_by_index(index):
+def find_reservation_by_index(index: int):
     for reservation in reservation_cache:
         if reservation.get_index() == index:
             return reservation
@@ -57,7 +57,7 @@ def find_reservation_by_index(index):
 # Finds all reservations in the list that belong
 # to a certain hotel index.
 # > Returns a list of reservation dictionaries.
-def find_reservations_by_hotel_index(index):
+def find_reservations_by_hotel_index(index: int):
     output = []
     for reservation in reservation_cache:
         if reservation.hotel_index == index:
@@ -68,7 +68,7 @@ def find_reservations_by_hotel_index(index):
 # Finds all reservations in the list that belong
 # to a certain user index.
 # > Returns a list of reservation dictionaries.
-def find_reservations_by_user_index(index):
+def find_reservations_by_user_index(index: int):
     output = []
     for reservation in reservation_cache:
         if reservation.user_index == index:
