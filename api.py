@@ -252,14 +252,18 @@ class Login(Resource):
         parser.add_argument('password', type=str)
         args = parser.parse_args()
 
-        username = str(args["username"])
-        password = str(args["password"])
+        username = args["username"]
+        password = args["password"]
 
-        if len(username) < 1:
-            flash("Please enter a username to continue!")
-            return
-        if len(password) < 1:
-            flash("Please enter a password to continue!")
+        try:
+            if len(username) < 1:
+                flash("Please enter a username to continue!")
+                return
+            if len(password) < 1:
+                flash("Please enter a password to continue!")
+                return
+        except (ValueError, TypeError):
+            flash("An error occured. Please try again.")
             return
 
         if not up.login(username, password):
@@ -343,18 +347,28 @@ class MakeAccount(Resource):
         username = args["username"]
         password = args["password"]
 
-        if len(f_name) < 1:
-            return "No first name inputted!"
-        if len(l_name) < 1:
-            return "No last name inputted!"
-        if len(email) < 1:
-            return "No email inputted!"
-        if len(phone_num) < 1:
-            return "No phone number inputted!"
-        if len(username) < 1:
-            return "No username inputted!"
-        if len(password) < 1:
-            return "No password inputted!"
+        try:
+            if len(f_name) < 1:
+                flash("No first name inputted!")
+                return
+            if len(l_name) < 1:
+                flash("No last name inputted!")
+                return
+            if len(email) < 1:
+                flash("No email inputted!")
+                return
+            if len(phone_num) < 1:
+                flash("No phone number inputted!")
+                return
+            if len(username) < 1:
+                flash("No username inputted!")
+                return
+            if len(password) < 1:
+                flash("No password inputted!")
+                return
+        except (ValueError, TypeError):
+            flash("An error occured. Please try again.")
+            return
 
         for user in up.user_cache:
             if user.get_username() == username:
