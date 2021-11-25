@@ -372,7 +372,8 @@ class MakeAccount(Resource):
 
         for user in up.user_cache:
             if user.get_username() == username:
-                return "Username already exists!"
+                flash("Username already exists!")
+                return
 
         new_user = up.make_user(
             username,
