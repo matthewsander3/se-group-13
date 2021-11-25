@@ -343,17 +343,17 @@ class MakeAccount(Resource):
         username = args["username"]
         password = args["password"]
 
-        if f_name is None:
+        if len(f_name) < 1:
             return "No first name inputted!"
-        if l_name is None:
+        if len(l_name) < 1:
             return "No last name inputted!"
-        if email is None:
+        if len(email) < 1:
             return "No email inputted!"
-        if phone_num is None:
+        if len(phone_num) < 1:
             return "No phone number inputted!"
-        if username is None:
+        if len(username) < 1:
             return "No username inputted!"
-        if password is None:
+        if len(password) < 1:
             return "No password inputted!"
 
         for user in up.user_cache:
