@@ -16,6 +16,8 @@ api = Api(app)
 
 parser = reqparse.RequestParser()
 
+valid_roomtypes = ["Standard", "Queen", "King"]
+
 # HotelList Endpoint (/hotels)
 # Shows all hotels. Takes in no arguments.
 class HotelList(Resource):
@@ -85,7 +87,7 @@ class HotelSearch(Resource):
 
         args = parser.parse_args()
 
-        # In and our years are passed as strings: YYYY-MM-DD
+        # In and out dates are passed as strings: YYYY-MM-DD
         in_year_list = args["in_date"].split("-")
         out_year_list = args["out_date"].split("-")
 
@@ -108,7 +110,7 @@ class HotelSearch(Resource):
 
         # Passed as a string, validate it is a room type
         room_type = args["room_type"]
-        if room_type not in ["Standard", "Queen", "King"]:
+        if room_type not in valid_roomtypes:
             room_type = "Standard"
 
         # Passed as multiple bools, we will give it to our search function as a dictionary
@@ -183,17 +185,63 @@ class Customers(Resource):
 
         return output
 
-## TODO ##
 # Create reservation endpoint
 class MakeReservation(Resource):
     def post(self):
         if not is_logged_in():
             return please_login_alert()
 
+        parser.add_argument('sdate', type=str)
+        parser.add_argument('edate', type=str)
+        parser.add_argument('roomType', type=str)
+        parser.add_argument('numRooms')
         args = parser.parse_args()
-        return True
+
+        # In and out dates are passed as strings: YYYY-MM-DD
+        in_year_list = args["sdate"].split("-")
+        out_year_list = args["edate"].split("-")
+
+        in_date = None
+        out_date = None
+
+
+        # If we were passed a malformed or empty or null string,
+        # catch that error and set it to a default date
+        try:
+            in_date = dt.date(in_year_list[0], in_year_list[1], in_year_list[2])
+        except (IndexError, ValueError):
+            flash("Invalid or incorrect start date, please retry.")
+            return
+
+        try:
+            out_date = dt.date(out_year_list[0], out_year_list[1], out_year_list[2])
+        except (IndexError, ValueError):
+            flash("Invalid or incorrect end date, please retry.")
+            return
+
+        room_type = args["room_type"]
+        if room_type not in valid_roomtypes:
+            flash("Invalid room type, please retry.")
+            return
+
+        num_rooms = cast_to_int_or_default(args["numRooms"], 1)
+
+        new_reservation = rp.make_reservation(
+            up.active_user_index,
+            0, # TODO: Hotel index here
+            num_rooms,
+            room_type,
+            in_date,
+            out_date,
+        )
+
+        rp.reservation_cache.append(new_reservation)
+        rp.update_file_with_new_reservations()
+
+        flash("Reservation successful!")
+        return redirect("/home")
     def get(self):
-        return "This is where you make a reservation"
+        return make_response(render_template('make_reservations.html'), 200)
 
 # View reservation endpoint
 class ViewReservation(Resource):
@@ -209,7 +257,7 @@ class ViewReservation(Resource):
         args = parser.parse_args()
 
         if args["cancel"]:
-            removed_reservation = rp.find_reservation_by_index(0) # TODO: Hardcoded 1st
+            removed_reservation = rp.find_reservation_by_index(0) # TODO: Reservation Index Here
             if removed_reservation is not None:
                 rp.reservation_cache.remove(removed_reservation)
                 rp.update_file_with_new_reservations()

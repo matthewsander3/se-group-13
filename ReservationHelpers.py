@@ -1,8 +1,29 @@
 import Reservation
 import json
-import datetime as dt
+from datetime import date
 
 reservation_cache = []
+
+# Makes a new reservation object with all passed parameters.
+# > Returns a reservation object.
+def make_reservation(
+        user_index: int,
+        hotel_index: int,
+        num_rooms_reserved: int,
+        room_type_reserved: str,
+        in_date: date,
+        out_date: date
+        ) -> Reservation:
+
+    return Reservation.Reservation(
+        len(reservation_cache),
+        user_index,
+        hotel_index,
+        num_rooms_reserved,
+        room_type_reserved,
+        in_date,
+        out_date,
+        )
 
 # When passed a dictionary of reservation info
 # Translates it into a Reservation object.
@@ -14,12 +35,12 @@ def dict_to_reservation(reserve_dict: dict):
     hotel_index = reserve_dict["hotel_index"] #Integer
     num_rooms_reserved = reserve_dict["num_rooms_reserved"] #Integer
     room_type_reserved = reserve_dict["room_type_reserved"] #String
-    in_date = dt.date(
+    in_date = date(
         reserve_dict["in_date"]["year"],
         reserve_dict["in_date"]["month"],
         reserve_dict["in_date"]["day"]
         )
-    out_date = dt.date(
+    out_date = date(
         reserve_dict["out_date"]["year"],
         reserve_dict["out_date"]["month"],
         reserve_dict["out_date"]["day"]
