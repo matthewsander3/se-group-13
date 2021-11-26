@@ -8,12 +8,15 @@ import HotelHelpers as hp
 import ReservationHelpers as rp
 import UserHelpers as up
 
-#make new app in Flask and wrap in RESTful API
+# make new app in Flask and wrap in RESTful API
 app = Flask(__name__)
 app.config['SECRET_KEY'] = ";pUf;63iVV5&sI`r4XvZ4vqkW.g~jj"
+
 api = Api(app)
 
 parser = reqparse.RequestParser()
+
+valid_roomtypes = ["Standard", "Queen", "King"]
 
 # HotelList Endpoint (/hotels)
 # Shows all hotels. Takes in no arguments.
@@ -45,6 +48,12 @@ class Hotel(Resource):
         hotel_str = "Hotel #" + str(hotel_id) + ":"
         return make_response(render_template('hotels.html', top_text=hotel_str, hotels=output), 200)
 
+
+# Constants that determine how much to increase or decrease
+# the price range of a room if no valid rooms were found.
+NO_ROOMS_MIN_PRICE_DECREASE = 25
+NO_ROOMS_MAX_PRICE_INCREASE = 25
+
 # Hotel search (/hotels/search)
 # Shows all valid hotels within the various arguments passed.
 # Arguments include
@@ -60,105 +69,104 @@ class HotelSearch(Resource):
         if home_post():
             return home_wrapper()
 
-        parser.add_argument('in_year', type=int)
-        parser.add_argument('in_month', type=int)
-        parser.add_argument('in_day', type=int)
-        parser.add_argument('out_year', type=int)
-        parser.add_argument('out_month', type=int)
-        parser.add_argument('out_day', type=int)
-        parser.add_argument('num_rooms', type=int)
+        #Ints
+        parser.add_argument('num_rooms')
+        parser.add_argument('price_range_min')
+        parser.add_argument('price_range_max')
+
+        #Bools (Amenities)
+        parser.add_argument('amen_pool', type=bool)
+        parser.add_argument('amen_gym', type=bool)
+        parser.add_argument('amen_spa', type=bool)
+        parser.add_argument('amen_office', type=bool)
+
+        #Strings
         parser.add_argument('room_type', type=str)
+        parser.add_argument('in_date', type=str)
+        parser.add_argument('out_date', type=str)
+
         args = parser.parse_args()
 
-        in_year = args["in_year"]
-        in_month = args["in_month"]
-        in_day = args["in_day"]
+        # In and out dates are passed as strings: YYYY-MM-DD
+        in_year_list = args["in_date"].split("-")
+        out_year_list = args["out_date"].split("-")
 
-        out_year = args["out_year"]
-        out_month = args["out_month"]
-        out_day = args["out_day"]
+        # If we were passed a malformed or empty or null string,
+        # catch that error and set it to a default date
+        try:
+            in_date = dt.date(in_year_list[0], in_year_list[1], in_year_list[2])
+        except (IndexError, ValueError):
+            in_date = dt.date(1, 1, 1)
 
-        # Turn our inputted dates into datetime objects.
-        # If they didn't enter a date, or the dates are invalid somehow,
-        # then leave the objects as null / none.
-        in_date = None
-        if in_year and in_month and in_day:
-            in_date = dt.date(in_year, in_month, in_day)
+        try:
+            out_date = dt.date(out_year_list[0], out_year_list[1], out_year_list[2])
+        except (IndexError, ValueError):
+            out_date = dt.date(9999, 12, 31)
 
-        out_date = None
-        if out_year and out_month and out_day:
-            out_date = dt.date(out_year, out_month, out_day)
+        # Passed as integers, but can be an empty string if the box is empty
+        num_rooms = cast_to_int_or_default(args["num_rooms"], 1)
+        price_range_min = cast_to_int_or_default(args["price_range_min"], 0)
+        price_range_max = cast_to_int_or_default(args["price_range_max"], 10000)
 
-        output = []
+        # Passed as a string, validate it is a room type
+        room_type = args["room_type"]
+        if room_type not in valid_roomtypes:
+            room_type = "Standard"
 
-        for hotel in hp.hotel_cache:
-            if args["room_type"] not in hotel.get_rooms_dict():
-                continue
+        # Passed as multiple bools, we will give it to our search function as a dictionary
+        req_amenities = {
+            "Pool": args["amen_pool"],
+            "Gym": args["amen_gym"],
+            "Spa": args["amen_spa"],
+            "Business Office": args["amen_office"]
+        }
 
-            final_room_num = hotel.get_num_rooms()
-            # Loop through every reservation we have.
-            for reservation in rp.reservation_cache:
-                if reservation.get_hotel_index() != hotel.get_index():
-                    continue
+        # Our first shot at searching
+        ret_text = "Found Hotels:"
+        output = hp.find_certain_hotels(
+            room_type,
+            num_rooms,
+            req_amenities,
+            in_date,
+            out_date,
+            price_range_min,
+            price_range_max
+            )
 
-                # If the current reservation falls outside of the date specified, we don't need to care
-                if in_date is not None and out_date is not None:
-                    if in_date < reservation.get_in_date() and out_date > reservation.get_out_date():
-                        continue
+        # Did our first shot return no results?
+        # Search agin with a wider price range
+        if len(output) < 1:
+            ret_text = "No hotels found - Found hotels in wider price range:"
+            output = hp.find_certain_hotels(
+                room_type,
+                num_rooms,
+                req_amenities,
+                in_date,
+                out_date,
+                price_range_min - NO_ROOMS_MIN_PRICE_DECREASE,
+                price_range_max + NO_ROOMS_MAX_PRICE_INCREASE
+                )
 
-                final_room_num = final_room_num - reservation.get_num_rooms_reserved()
+        # Did our wider prince range return no results?
+        # Then it's up to the user, now
+        if len(output) < 1:
+            ret_text = "No hotels found!"
 
-            # If the number of available rooms less than the specified number of rooms, don't show the hotel
-            if final_room_num >= args["num_rooms"]:
-                output.append(hp.hotel_to_dict(hotel))
-
-        return make_response(render_template('hotels.html', top_text="Searched Hotels:", hotels=output), 200)
+        return make_response(render_template('hotels.html', top_text=ret_text, hotels=output), 200)
 
     def get(self):
         return make_response(render_template('hotel_search.html'), 200)
 
-# Constants that determine how much to increase or decrease
-# the price range of a room if no valid rooms were found.
-NO_ROOMS_MIN_PRICE_DECREASE = 25
-NO_ROOMS_MAX_PRICE_INCREASE = 25
+# Passed empty text fields are only populated with the null character ('')
+# So run everything though this function to default it to a certain int if it is empty (or cast if it's not)
+def cast_to_int_or_default(value: str, default: int) -> int:
+    if str is None:
+        return default
 
-## TODO ##
-# Hotel Filter (/hotels/filter)
-# Filters a passed list of hotels further
-class HotelFilter(Resource):
-    def post(self, price_range_low, price_range_high):
-        parser.add_argument('num_rooms', type=int)
-        parser.add_argument('room_type', type=str)
-        args = parser.parse_args()
-
-        num_rooms = int(args["num_rooms"])
-        room_type = int(args["room_type"])
-
-        hotel_list = [] #TODO: This needs to be passed in.
-        amenity_list = [] #TODO: Ditto
-
-        # Check with our price range
-        returned_hotels = hp.find_certain_hotels(
-            hotel_list,
-            num_rooms,
-            amenity_list,
-            room_type,
-            price_range_low,
-            price_range_high
-        )
-
-        # No price range? Try again with a bigger range
-        if len(returned_hotels) < 1:
-            returned_hotels = hp.find_certain_hotels(
-                hotel_list,
-                num_rooms,
-                amenity_list,
-                room_type,
-                price_range_low - NO_ROOMS_MIN_PRICE_DECREASE,
-                price_range_high + NO_ROOMS_MAX_PRICE_INCREASE
-            )
-
-        return returned_hotels if len(returned_hotels) > 0 else "No hotels found!"
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return default
 
 
 # Customers (/admin/customers)
@@ -177,19 +185,64 @@ class Customers(Resource):
 
         return output
 
-## TODO ##
 # Create reservation endpoint
 class MakeReservation(Resource):
     def post(self):
         if not is_logged_in():
             return please_login_alert()
 
+        parser.add_argument('sdate', type=str)
+        parser.add_argument('edate', type=str)
+        parser.add_argument('roomType', type=str)
+        parser.add_argument('numRooms')
         args = parser.parse_args()
-        return True
-    def get(self):
-        return "This is where you make a reservation"
 
-## TODO ##
+        # In and out dates are passed as strings: YYYY-MM-DD
+        in_year_list = args["sdate"].split("-")
+        out_year_list = args["edate"].split("-")
+
+        in_date = None
+        out_date = None
+
+
+        # If we were passed a malformed or empty or null string,
+        # catch that error and set it to a default date
+        try:
+            in_date = dt.date(in_year_list[0], in_year_list[1], in_year_list[2])
+        except (IndexError, ValueError):
+            flash("Invalid or incorrect start date, please retry.")
+            return
+
+        try:
+            out_date = dt.date(out_year_list[0], out_year_list[1], out_year_list[2])
+        except (IndexError, ValueError):
+            flash("Invalid or incorrect end date, please retry.")
+            return
+
+        room_type = args["room_type"]
+        if room_type not in valid_roomtypes:
+            flash("Invalid room type, please retry.")
+            return
+
+        num_rooms = cast_to_int_or_default(args["numRooms"], 1)
+
+        new_reservation = rp.make_reservation(
+            up.active_user_index,
+            0, # TODO: Hotel index here
+            num_rooms,
+            room_type,
+            in_date,
+            out_date,
+        )
+
+        rp.reservation_cache.append(new_reservation)
+        rp.update_file_with_new_reservations()
+
+        flash("Reservation successful!")
+        return redirect("/home")
+    def get(self):
+        return make_response(render_template('make_reservations.html'), 200)
+
 # View reservation endpoint
 class ViewReservation(Resource):
     # Cancel reservations.
@@ -204,7 +257,7 @@ class ViewReservation(Resource):
         args = parser.parse_args()
 
         if args["cancel"]:
-            removed_reservation = rp.find_reservation_by_index(0) # TODO: Hardcoded 1st
+            removed_reservation = rp.find_reservation_by_index(0) # TODO: Reservation Index Here
             if removed_reservation is not None:
                 rp.reservation_cache.remove(removed_reservation)
                 rp.update_file_with_new_reservations()
@@ -235,26 +288,6 @@ class ViewReservation(Resource):
 
         return make_response(render_template('reservations.html', reservations=output, admin=is_admin), 200)
 
-## TODO ##
-# Cancel reservation endpoint
-class CancelReservation(Resource):
-    def post(self):
-        if not is_logged_in():
-            return please_login_alert()
-
-        # Passed a user index and a hotel index.
-        if not True:
-            return "No reservations found", 404
-
-        #code here to cancel a reservation in the DB
-
-        return "Reservation cancelled", 200
-    def get(self):
-        if not is_logged_in():
-            return please_login_alert()
-
-        return "This is where you cancel reservations", 202
-
 # Login (/login)
 # Allows a user or admin to login to their account.
 class Login(Resource):
@@ -267,14 +300,18 @@ class Login(Resource):
         parser.add_argument('password', type=str)
         args = parser.parse_args()
 
-        username = str(args["username"])
-        password = str(args["password"])
+        username = args["username"]
+        password = args["password"]
 
-        if len(username) < 1:
-            flash("Please enter a username to continue!")
-            return
-        if len(password) < 1:
-            flash("Please enter a password to continue!")
+        try:
+            if len(username) < 1:
+                flash("Please enter a username to continue!")
+                return
+            if len(password) < 1:
+                flash("Please enter a password to continue!")
+                return
+        except (ValueError, TypeError):
+            flash("An error occured. Please try again.")
             return
 
         if not up.login(username, password):
@@ -286,7 +323,7 @@ class Login(Resource):
     def get(self):
         return make_response(render_template('login.html'), 200)
 
-def logout_post():
+def logout_post() -> bool:
     parser.add_argument('logout', type=bool)
     args = parser.parse_args()
 
@@ -302,7 +339,7 @@ def logout_wrapper():
     up.logout()
     return redirect("/login")
 
-def home_post():
+def home_post() -> bool:
     parser.add_argument('home', type=bool)
     args = parser.parse_args()
 
@@ -317,12 +354,12 @@ def home_wrapper():
 # Checks if the current user is an admin.
 # Returns TRUE if so, FALSE if there is no current user
 # or if the current is not an admin
-def is_admin_logged_in():
+def is_admin_logged_in() -> bool:
     return up.check_if_active_user_is_admin()
 
 # Checks if there is a user currently logged in.
 # Returns TRUE if there is a user, FALSE otherwise
-def is_logged_in():
+def is_logged_in() -> bool:
     return up.active_user_index >= 0
 
 # Wrapper for an alert for when a user is not
@@ -343,37 +380,48 @@ class MakeAccount(Resource):
             flash("Log out first!") # Obviously don't include this in the end
             return
 
-        parser.add_argument('fname', type=str)
-        parser.add_argument('lname', type=str)
-        parser.add_argument('email', type=str)
-        parser.add_argument('phone_num', type=str)
-        parser.add_argument('username', type=str)
-        parser.add_argument('password', type=str)
+        parser.add_argument('fname', type=str, trim = True)
+        parser.add_argument('lname', type=str, trim = True)
+        parser.add_argument('email', type=str, trim = True)
+        parser.add_argument('phone_num', type=str, trim = True)
+        parser.add_argument('username', type=str, trim = True)
+        parser.add_argument('password', type=str, trim = True)
         args = parser.parse_args()
 
-        f_name = str(args["fname"])
-        l_name = str(args["lname"])
-        email = str(args["email"])
-        phone_num = str(args["phone_num"])
-        username = str(args["username"])
-        password = str(args["password"])
+        f_name = args["fname"]
+        l_name = args["lname"]
+        email = args["email"]
+        phone_num = args["phone_num"]
+        username = args["username"]
+        password = args["password"]
 
-        if len(f_name) < 1:
-            return "No first name inputted!"
-        if len(l_name) < 1:
-            return "No last name inputted!"
-        if len(email) < 1:
-            return "No email inputted!"
-        if len(phone_num) < 1:
-            return "No phone number inputted!"
-        if len(username) < 1:
-            return "No username inputted!"
-        if len(password) < 1:
-            return "No password inputted!"
+        try:
+            if len(f_name) < 1:
+                flash("No first name inputted!")
+                return
+            if len(l_name) < 1:
+                flash("No last name inputted!")
+                return
+            if len(email) < 1:
+                flash("No email inputted!")
+                return
+            if len(phone_num) < 1:
+                flash("No phone number inputted!")
+                return
+            if len(username) < 1:
+                flash("No username inputted!")
+                return
+            if len(password) < 1:
+                flash("No password inputted!")
+                return
+        except (ValueError, TypeError):
+            flash("An error occured. Please try again.")
+            return
 
         for user in up.user_cache:
             if user.get_username() == username:
-                return "Username already exists!"
+                flash("Username already exists!")
+                return
 
         new_user = up.make_user(
             username,
@@ -459,19 +507,18 @@ api.add_resource(Hotel, '/hotels/<int:hotel_id>')
 api.add_resource(HotelSearch, '/hotels/search')
 api.add_resource(MakeReservation, '/hotels/<int:hotel_id>/reserve')
 api.add_resource(ViewReservation, '/reservations')
-api.add_resource(HotelFilter, '/hotels/search/<int:price_range_low>/<int:price_range_high>')
 api.add_resource(Customers, '/admin/customers')
 
 # Initialize all hotels from the json
-def init_hotels(json_data):
+def init_hotels(json_data: list):
     hp.hotels_to_list(json_data)
 
 # Initialize all reservations from the json
-def init_reservations(json_data):
+def init_reservations(json_data: list):
     rp.reservations_to_list(json_data)
 
 # Initialize all users from the json
-def init_users(json_data):
+def init_users(json_data: list):
     up.users_to_list(json_data)
 
 if __name__ == "__main__":

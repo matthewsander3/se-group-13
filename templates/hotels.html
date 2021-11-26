@@ -12,18 +12,26 @@
   </form>
 
   <h1>{{ top_text }}</h1>
-  {% for hotel in hotels %}
-    <div id={{ hotel.name }}>
-      <p>
-        <li>Hotel: {{ hotel.name }}</li>
-        <li>&nbsp;&nbsp;Rooms Available: {{ hotel.rooms }}</li>
-        <li>&nbsp;&nbsp;Weekend Differential: ${{ hotel.weekend_differential }}</li>
-        <li>&nbsp;&nbsp;Has:&nbsp;{{ hotel.amenity_list|join(', ') }}</li>
-        <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Standard %}Standard rooms: ${{ hotel.rooms_dict.Standard }} {%endif%}</li>
-        <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Queen %}Queen rooms: ${{ hotel.rooms_dict.Queen }} {%endif%}</li>
-        <li>&nbsp;&nbsp;{% if hotel.rooms_dict.King %}King rooms: ${{ hotel.rooms_dict.King }} {%endif%}</li>
-      </p>
+    <div>
+      {% if hotels|length >= 1 %}
+        {% for hotel in hotels %}
+          <div id={{ hotel.name }}>
+            <p>
+              <li>Hotel: {{ hotel.name }}</li>
+              <li>&nbsp;&nbsp;Rooms Available: {{ hotel.rooms }}</li>
+              <li>&nbsp;&nbsp;Weekend Differential: ${{ hotel.weekend_differential }}</li>
+              <li>&nbsp;&nbsp;Has:&nbsp;{{ hotel.amenity_list|join(', ') }}</li>
+              <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Standard %}Standard rooms: ${{ hotel.rooms_dict.Standard }} {%endif%}</li>
+              <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Queen %}Queen rooms: ${{ hotel.rooms_dict.Queen }} {%endif%}</li>
+              <li>&nbsp;&nbsp;{% if hotel.rooms_dict.King %}King rooms: ${{ hotel.rooms_dict.King }} {%endif%}</li>
+            </p>
+          </div>
+        {% endfor %}
+      {% else %}
+        No hotels were found with your search criteria.
+        An additional search was attempted with a wider price range,
+        which also returned no results. You may need to adjust your inputs!
+      {% endif %}
     </div>
-  {% endfor %}
 </body>
 </html>
