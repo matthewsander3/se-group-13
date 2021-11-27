@@ -1,19 +1,56 @@
 [
-    {
-        "index": 0,
-        "user_index": 0,
-        "hotel_index": 0,
-        "num_rooms_reserved": 1,
-        "room_type_reserved": "Standard",
-        "in_date": {
-            "day": 1,
-            "month": 1,
-            "year": 2000
-        },
-        "out_date": {
-            "day": 5,
-            "month": 1,
-            "year": 2000
-        }
+  {
+    "index": 0,
+    "user_index": 0,
+    "hotel_index": 0,
+    "num_rooms_reserved": 1,
+    "room_type_reserved": "Standard",
+    "price": 100,
+    "in_date": {
+      "year": 2000,
+      "month": 1,
+      "day": 1
+    },
+    "out_date": {
+      "year": 2000,
+      "month": 1,
+      "day": 5
     }
+  },
+  {
+    "index": 1,
+    "user_index": 0,
+    "hotel_index": 2,
+    "num_rooms_reserved": 2,
+    "room_type_reserved": "Standard",
+    "price": 50,
+    "in_date": {
+      "year": 2021,
+      "month": 12,
+      "day": 8
+    },
+    "out_date": {
+      "year": 2021,
+      "month": 12,
+      "day": 10
+    }
+  },
+  {
+    "index": 3,
+    "user_index": 2,
+    "hotel_index": 4,
+    "num_rooms_reserved": 1,
+    "room_type_reserved": "Queen",
+    "price": 175,
+    "in_date": {
+      "year": 2021,
+      "month": 12,
+      "day": 10
+    },
+    "out_date": {
+      "year": 2021,
+      "month": 12,
+      "day": 11
+    }
+  }
 ]

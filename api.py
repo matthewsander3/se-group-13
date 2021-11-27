@@ -24,9 +24,14 @@ class HotelList(Resource):
     def post(self):
         if logout_post():
             return logout_wrapper()
-
+        if login_post():
+            return login_wrapper()
         if home_post():
             return home_wrapper()
+
+        reserved_hotel = reserve_post()
+        if reserved_hotel >= 0:
+           return redirect("/hotels/" + str(reserved_hotel) + "/reserve")
 
         return self.get()
 
@@ -34,11 +39,15 @@ class HotelList(Resource):
         output = []
         for hotel in hp.hotel_cache:
             output.append(hp.hotel_to_dict(hotel))
-        return make_response(render_template('hotels.html', top_text="All Hotels", hotels=output), 200)
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('hotels.html', user=curr_user, top_text="All Hotels", hotels=output), 200)
 
 # Hotel (/hotels/[integer])
 # Shows the hotel at the given index in the URL. Takes no arguments.
 class Hotel(Resource):
+    def post(self, hotel_id):
+        return redirect("/hotels/" + str(hotel_id) + "/reserve")
+
     def get(self, hotel_id):
         output = [hp.hotel_to_dict(hp.find_hotel_by_index(hotel_id))]
 
@@ -46,7 +55,8 @@ class Hotel(Resource):
             return "No hotels found at index " + str(hotel_id) + "!"
 
         hotel_str = "Hotel #" + str(hotel_id) + ":"
-        return make_response(render_template('hotels.html', top_text=hotel_str, hotels=output), 200)
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('hotels.html', user=curr_user, top_text=hotel_str, hotels=output), 200)
 
 
 # Constants that determine how much to increase or decrease
@@ -65,9 +75,14 @@ class HotelSearch(Resource):
     def post(self):
         if logout_post():
             return logout_wrapper()
-
+        if login_post():
+            return login_wrapper()
         if home_post():
             return home_wrapper()
+
+        reserved_hotel = reserve_post()
+        if reserved_hotel >= 0:
+           return redirect("/hotels/" + str(reserved_hotel) + "/reserve")
 
         #Ints
         parser.add_argument('num_rooms')
@@ -94,12 +109,12 @@ class HotelSearch(Resource):
         # If we were passed a malformed or empty or null string,
         # catch that error and set it to a default date
         try:
-            in_date = dt.date(in_year_list[0], in_year_list[1], in_year_list[2])
+            in_date = dt.date(int(in_year_list[0]), int(in_year_list[1]), int(in_year_list[2]))
         except (IndexError, ValueError):
             in_date = dt.date(1, 1, 1)
 
         try:
-            out_date = dt.date(out_year_list[0], out_year_list[1], out_year_list[2])
+            out_date = dt.date(int(out_year_list[0]), int(out_year_list[1]), int(out_year_list[2]))
         except (IndexError, ValueError):
             out_date = dt.date(9999, 12, 31)
 
@@ -152,10 +167,12 @@ class HotelSearch(Resource):
         if len(output) < 1:
             ret_text = "No hotels found!"
 
-        return make_response(render_template('hotels.html', top_text=ret_text, hotels=output), 200)
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('hotels.html', user=curr_user, top_text=ret_text, hotels=output), 200)
 
     def get(self):
-        return make_response(render_template('hotel_search.html'), 200)
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('hotel_search.html', user=curr_user), 200)
 
 # Passed empty text fields are only populated with the null character ('')
 # So run everything though this function to default it to a certain int if it is empty (or cast if it's not)
@@ -172,6 +189,33 @@ def cast_to_int_or_default(value: str, default: int) -> int:
 # Customers (/admin/customers)
 # Shows all users, only available to admins.
 class Customers(Resource):
+    def post(self):
+        if not is_logged_in():
+            return please_login_alert()
+        if not is_admin_logged_in():
+            return admin_only_alert()
+        if logout_post():
+            return logout_wrapper()
+        if home_post():
+            return home_wrapper()
+
+        for user in up.user_cache:
+            parser.add_argument(str(user.get_index())+"-delete", type=bool)
+        args = parser.parse_args()
+
+        for key in args:
+            if "delete" not in key:
+                continue
+
+            if args[key]:
+                argument_split = key.split("-")
+                remove_user = up.find_user_by_index(int(argument_split[0]))
+                up.user_cache.remove(remove_user)
+                up.update_file_with_new_user()
+                flash("Deleted " + remove_user.get_username() + "\'s account.")
+
+        return self.get()
+
     def get(self):
         if not is_logged_in():
             return please_login_alert()
@@ -183,11 +227,12 @@ class Customers(Resource):
         for user in up.user_cache:
             output.append(up.user_to_dict(user))
 
-        return output
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('customers.html', user=curr_user, customers=output), 200)
 
 # Create reservation endpoint
 class MakeReservation(Resource):
-    def post(self):
+    def post(self, hotel_id):
         if not is_logged_in():
             return please_login_alert()
 
@@ -204,44 +249,119 @@ class MakeReservation(Resource):
         in_date = None
         out_date = None
 
-
         # If we were passed a malformed or empty or null string,
         # catch that error and set it to a default date
         try:
-            in_date = dt.date(in_year_list[0], in_year_list[1], in_year_list[2])
+            in_date = dt.date(int(in_year_list[0]), int(in_year_list[1]), int(in_year_list[2]))
         except (IndexError, ValueError):
             flash("Invalid or incorrect start date, please retry.")
-            return
+            return redirect("/hotels/"+ str(hotel_id) + "/reserve")
 
         try:
-            out_date = dt.date(out_year_list[0], out_year_list[1], out_year_list[2])
+            out_date = dt.date(int(out_year_list[0]), int(out_year_list[1]), int(out_year_list[2]))
         except (IndexError, ValueError):
             flash("Invalid or incorrect end date, please retry.")
-            return
+            return redirect("/hotels/"+ str(hotel_id) + "/reserve")
 
-        room_type = args["room_type"]
+        if in_date < dt.date.today() or out_date < dt.date.today():
+            flash("You can't make a reservation in the past.")
+            return redirect("/hotels/"+ str(hotel_id) + "/reserve")
+
+        if out_date < in_date:
+            flash("You cannot reserve for an out date prior to the in date.")
+            return redirect("/hotels/"+ str(hotel_id) + "/reserve")
+
+        room_type = args["roomType"]
         if room_type not in valid_roomtypes:
             flash("Invalid room type, please retry.")
-            return
+            return redirect("/hotels/"+ str(hotel_id) + "/reserve")
 
         num_rooms = cast_to_int_or_default(args["numRooms"], 1)
 
+        # Now we calculate our price
+        hotel = hp.find_hotel_by_index(hotel_id)
+        hotel_prices = hotel.get_rooms_dict()
+        if room_type not in hotel_prices:
+            flash("That room type is not valid for that hotel.")
+            return redirect("/hotels/"+ str(hotel_id) + "/reserve")
+
+        # We get the price for our room type...
+        price = hotel_prices[room_type]
+
+        is_weekend_reservation = False
+        # If we start or end on a weekend...
+        if rp.is_on_weekend(in_date) or rp.is_on_weekend(out_date):
+            is_weekend_reservation = True
+
+        # If the time between the in date and the outdate puts us on or past a weekend...
+        if (in_date - out_date).days + in_date.weekday() >= 5:
+            is_weekend_reservation = True
+
+        # ...Add in the weekend differential to the price
+        if is_weekend_reservation:
+            price = price + hotel.get_diff()
+
+        price = price * num_rooms
+
         new_reservation = rp.make_reservation(
             up.active_user_index,
-            0, # TODO: Hotel index here
+            hotel_id,
             num_rooms,
             room_type,
+            price,
             in_date,
             out_date,
         )
 
         rp.reservation_cache.append(new_reservation)
-        rp.update_file_with_new_reservations()
+        print("Success")
+        return redirect("/hotels/"+ str(hotel_id) + "/reserve/confirm_" + str(new_reservation.get_index()))
 
-        flash("Reservation successful!")
-        return redirect("/home")
-    def get(self):
-        return make_response(render_template('make_reservations.html'), 200)
+    def get(self, hotel_id):
+        if not is_logged_in():
+            return please_login_alert()
+
+        hotel = hp.find_hotel_by_index(hotel_id)
+        if not hotel:
+            return abort(404)
+        hotel_info = hp.hotel_to_dict(hotel)
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('make_reservation.html', user=curr_user, hotel=hotel_info), 200)
+
+class ConfirmReservation(Resource):
+    def post(self, hotel_id, reservation_id):
+        parser.add_argument('confirm_reservation', type=bool)
+        parser.add_argument('edit_reservation', type=bool)
+        args = parser.parse_args()
+
+        to_confirm = rp.find_reservation_by_index(reservation_id)
+
+        if args["edit_reservation"]:
+            rp.reservation_cache.remove(to_confirm)
+            return redirect("/hotels/" + str(hotel_id) + "/reserve")
+
+        if args["confirm_reservation"]:
+            rp.update_file_with_new_reservations()
+            flash("Reservation successful!")
+            return redirect("/home")
+
+        return abort(404)
+
+    def get(self, hotel_id, reservation_id):
+        if not is_logged_in():
+            return please_login_alert()
+
+        to_confirm = rp.find_reservation_by_index(reservation_id)
+        reserved_hotel = hp.find_hotel_by_index(hotel_id)
+
+        reservation_info = rp.reservation_to_dict(to_confirm)
+        reservation_info["in_date_string"] = to_confirm.get_in_date_string()
+        reservation_info["out_date_string"] = to_confirm.get_out_date_string()
+        reservation_info["hotel_info"] = hp.hotel_to_dict(reserved_hotel)
+        reservation_info["is_past"] = (to_confirm.get_in_date() <= dt.date.today())
+
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('res_confirm.html', user=curr_user, res=reservation_info), 200)
 
 # View reservation endpoint
 class ViewReservation(Resource):
@@ -249,18 +369,25 @@ class ViewReservation(Resource):
     def post(self):
         if logout_post():
             return logout_wrapper()
-
+        if login_post():
+            return login_wrapper()
         if home_post():
             return home_wrapper()
 
-        parser.add_argument('cancel', type=bool)
+        for reservation in rp.reservation_cache:
+            parser.add_argument(str(reservation.get_index())+"-cancel", type=bool)
         args = parser.parse_args()
 
-        if args["cancel"]:
-            removed_reservation = rp.find_reservation_by_index(0) # TODO: Reservation Index Here
-            if removed_reservation is not None:
-                rp.reservation_cache.remove(removed_reservation)
-                rp.update_file_with_new_reservations()
+        for key in args:
+            if "cancel" not in key:
+                continue
+
+            if args[key]:
+                argument_split = key.split("-")
+                removed_reservation = rp.find_reservation_by_index(int(argument_split[0]))
+                if removed_reservation is not None:
+                    rp.reservation_cache.remove(removed_reservation)
+                    rp.update_file_with_new_reservations()
 
         return self.get()
 
@@ -284,17 +411,18 @@ class ViewReservation(Resource):
             reservation_info["in_date_string"] = reservation.get_in_date_string()
             reservation_info["out_date_string"] = reservation.get_out_date_string()
             reservation_info["hotel_info"] = hp.hotel_to_dict(reserved_hotel)
+            reservation_info["is_past"] = (reservation.get_in_date() <= dt.date.today())
             output.append(reservation_info)
 
-        return make_response(render_template('reservations.html', reservations=output, admin=is_admin), 200)
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('reservations.html', user=curr_user, reservations=output, admin=is_admin), 200)
 
 # Login (/login)
 # Allows a user or admin to login to their account.
 class Login(Resource):
     def post(self):
         if is_logged_in():
-            flash("Log out first!") # Obviously don't include this in the end
-            return
+            return redirect("/home")
 
         parser.add_argument('username', type=str)
         parser.add_argument('password', type=str)
@@ -306,21 +434,24 @@ class Login(Resource):
         try:
             if len(username) < 1:
                 flash("Please enter a username to continue!")
-                return
+                return redirect("/login")
             if len(password) < 1:
                 flash("Please enter a password to continue!")
-                return
+                return redirect("/login")
         except (ValueError, TypeError):
             flash("An error occured. Please try again.")
-            return
+            return redirect("/login")
 
         if not up.login(username, password):
             flash("Login failed! Uername or password incorrect.")
-            return
+            return redirect("/login")
 
         return redirect("/home")
 
     def get(self):
+        if is_logged_in():
+            return redirect("/home")
+
         return make_response(render_template('login.html'), 200)
 
 def logout_post() -> bool:
@@ -351,6 +482,37 @@ def home_post() -> bool:
 def home_wrapper():
     return redirect("/home")
 
+def login_post() -> bool:
+    parser.add_argument('login', type=bool)
+    args = parser.parse_args()
+
+    if args["login"]:
+        return True
+
+    return False
+
+def login_wrapper():
+    return redirect("/login")
+
+# Checks for make reservation posts.
+# If a reservation post is found, return which hotel it was directed to.
+# Otherwise return -1 if none found.
+def reserve_post():
+    for hotel in hp.hotel_cache:
+        parser.add_argument(str(hotel.get_index())+"-reserve", type=bool)
+    args = parser.parse_args()
+
+    for key in args:
+        if "reserve" not in key:
+            continue
+
+        if args[key]:
+            argument_split = key.split("-")
+            return int(argument_split[0])
+
+    return -1
+
+
 # Checks if the current user is an admin.
 # Returns TRUE if so, FALSE if there is no current user
 # or if the current is not an admin
@@ -370,15 +532,15 @@ def please_login_alert():
     return redirect("/login")
 
 def admin_only_alert():
-    abort(401, message = "This page is for admins only!")
+    return abort(401, message = "This page is for admins only!")
 
 # Make account. (/makeaccount)
 # Allows a user to make a new account.
 class MakeAccount(Resource):
     def post(self):
         if is_logged_in():
-            flash("Log out first!") # Obviously don't include this in the end
-            return
+            flash("You are already logged in.") # Obviously don't include this in the end
+            return redirect("/home")
 
         parser.add_argument('fname', type=str, trim = True)
         parser.add_argument('lname', type=str, trim = True)
@@ -398,30 +560,30 @@ class MakeAccount(Resource):
         try:
             if len(f_name) < 1:
                 flash("No first name inputted!")
-                return
+                return redirect("/makeaccount")
             if len(l_name) < 1:
                 flash("No last name inputted!")
-                return
+                return redirect("/makeaccount")
             if len(email) < 1:
                 flash("No email inputted!")
-                return
+                return redirect("/makeaccount")
             if len(phone_num) < 1:
                 flash("No phone number inputted!")
-                return
+                return redirect("/makeaccount")
             if len(username) < 1:
                 flash("No username inputted!")
-                return
+                return redirect("/makeaccount")
             if len(password) < 1:
                 flash("No password inputted!")
-                return
+                return redirect("/makeaccount")
         except (ValueError, TypeError):
             flash("An error occured. Please try again.")
-            return
+            return redirect("/makeaccount")
 
         for user in up.user_cache:
             if user.get_username() == username:
                 flash("Username already exists!")
-                return
+                return redirect("/makeaccount")
 
         new_user = up.make_user(
             username,
@@ -441,7 +603,7 @@ class MakeAccount(Resource):
 
     def get(self):
         if is_logged_in():
-            redirect("/home")
+            return redirect("/home")
 
         return make_response(render_template('make_account.html'), 200)
 
@@ -458,7 +620,7 @@ class Welcome(Resource):
         if args['makeaccount']:
             return redirect("/makeaccount")
 
-        return 404
+        return abort(404)
 
     def get(self):
         return make_response(render_template('welcome.html'), 200,)
@@ -487,13 +649,13 @@ class Home(Resource):
 
             return redirect("/admin/customers")
 
-        return 404
+        return abort(404)
 
     def get(self):
         if not is_logged_in():
             return please_login_alert()
 
-        curr_user = up.user_to_dict(up.find_user_by_index(up.active_user_index))
+        curr_user = up.get_active_user_dict()
         return make_response(render_template('home.html', user=curr_user), 200)
 
 # API Resource Routing here
@@ -506,6 +668,7 @@ api.add_resource(HotelList,'/hotels')
 api.add_resource(Hotel, '/hotels/<int:hotel_id>')
 api.add_resource(HotelSearch, '/hotels/search')
 api.add_resource(MakeReservation, '/hotels/<int:hotel_id>/reserve')
+api.add_resource(ConfirmReservation, '/hotels/<int:hotel_id>/reserve/confirm_<int:reservation_id>')
 api.add_resource(ViewReservation, '/reservations')
 api.add_resource(Customers, '/admin/customers')
 

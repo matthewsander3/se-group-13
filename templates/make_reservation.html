@@ -1,30 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Make Reservation</title>
+  <title>Make Reservation</title>
 </head>
+
 <body>
 
-<h1>Book your Reservation!</h1>
-<form method="post">
-  <label for="sdate">Check-In Date:</label><br>
-  <input type="date" id="sdate" name="sdate"><br><br>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+          <span>{{ message }}</span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
 
-  <label for="edate">Check-Out Date:</label><br>
-  <input type="date" id="edate" name="edate"><br><br>
+  <form method="post">
+    {% if user %}
+      <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}
+      <input type="submit" id="login" name="login" value="Login">
+    {% endif %}
+    <input type="submit" id="home" name="home" value="Home">
+  </form>
 
-  <label for="numRooms">Number of Desired Rooms:</label><br>
-  <input type="number" id="numRooms" name="numRooms"><br><br>
+  <h1>Book your Reservation!</h1>
+  <form method="post">
+    <label for="sdate">Check-In Date:</label><br>
+    <input type="date" id="sdate" name="sdate"><br><br>
 
-  <label for="">Room Type:</label><br>
-  <select id="roomType" name="roomType">
-      <option value="Standard">Standard</option>
-      <option value="Queen">Queen</option>
-      <option value="King">King</option>
-  </select>
+    <label for="edate">Check-Out Date:</label><br>
+    <input type="date" id="edate" name="edate"><br><br>
 
-  <input type="submit" value="Submit">
-</form>
+    <label for="numRooms">Number of Desired Rooms:</label><br>
+    <input type="number" id="numRooms" name="numRooms"><br><br>
 
+    <label for="">Room Type:</label><br>
+    <select id="roomType" name="roomType">
+        {% if hotel.rooms_dict.Standard %} <option value="Standard">Standard</option> {% endif %}
+        {% if hotel.rooms_dict.Queen %} <option value="Queen">Queen</option> {% endif %}
+        {% if hotel.rooms_dict.King %} <option value="King">King</option> {% endif %}
+    </select>
+
+    <input type="submit" value="Submit">
+  </form>
 </body>
 </html>
