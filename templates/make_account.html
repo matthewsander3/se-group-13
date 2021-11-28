@@ -3,30 +3,43 @@
 <head>
   <title>Make Account</title>
 </head>
+
 <body>
 
-<h1>Make an account!</h1>
-<form method="post">
-  <label for="fname">First Name:</label><br>
-  <input type="text" id="fname" name="fname"><br><br>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+          <span>{{ message }}</span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
 
-  <label for="lname">Last name:</label><br>
-  <input type="text" id="lname" name="lname"><br><br>
+  <h1>Make an account!</h1>
+  <form method="post">
+    <label for="fname">First Name:</label><br>
+    <input type="text" id="fname" name="fname"><br><br>
 
-  <label for="email">Email Address:</label><br>
-  <input type="email" id="email" name="email"><br><br>
+    <label for="lname">Last name:</label><br>
+    <input type="text" id="lname" name="lname"><br><br>
 
-  <label for="phone_num">Phone Number:</label><br>
-  <input type="tel" id="phone_num" name="phone_num"><br><br>
+    <label for="email">Email Address:</label><br>
+    <input type="email" id="email" name="email"><br><br>
 
-  <label for="username">Username:</label><br>
-  <input type="text" id="username" name="username"><br><br>
+    <label for="phone_num">Phone Number:</label><br>
+    <input type="tel" id="phone_num" name="phone_num"><br><br>
 
-  <label for="password">Password:</label><br>
-  <input type="password" id="password" name="password"><br><br>
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username"><br><br>
 
-  <input type="submit" value="Submit">
-</form>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password"><br><br>
 
+    <input type="submit" value="Submit">
+  </form>
 </body>
 </html>

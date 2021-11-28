@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Make Reservation</title>
+  <title>Confirm Reservation</title>
 </head>
+
 <body>
-
-<h1>Confirm your Reservation!</h1>
-<form method="post">
-    <!--  TODO: Show the Hotel name, sDate, eDate, Total price for customers to confirm or edit using jinja
-  <label for="sdate">Check-In Date:</label><br>
-  <input type="date" id="sdate" name="sdate"><br><br>
-
-  <label for="edate">Check-Out Date:</label><br>
-  <input type="date" id="edate" name="edate"><br><br>
-
-  <label for="">Room Type:</label><br>
-  <select id="roomType" name="roomType">
-      <option value="Standard">Standard</option>
-      <option value="Queen">Queen</option>
-      <option value="King">King</option>
-  </select>
-  -->
-
-  <input type="submit" value="Edit">
-  <input type="submit" value="Confirm">
-</form>
-
+  <h1>Confirm your Reservation!</h1>
+  <div id="reservation_info">
+    Reservation (id: {{res.index}}) for {{res.hotel_info.name}}<br>
+    In date: {{res.in_date_string}}<br>
+    Out date: {{res.out_date_string}}<br>
+    Room type: {{res.room_type_reserved}}<br>
+    Num rooms: {{res.num_rooms_reserved}}<br>
+    Price: ${{res.price}}<br>
+  </div>
+  <div id="reservation_confirm_buttons">
+    <form method="post">
+      <input type="submit" id="edit_reservation" name="edit_reservation" value="Edit">
+      <input type="submit" id="confirm_reservation" name="confirm_reservation" value="Confirm">
+    </form>
+  </div>
 </body>
 </html>

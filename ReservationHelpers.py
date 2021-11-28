@@ -11,6 +11,7 @@ def make_reservation(
         hotel_index: int,
         num_rooms_reserved: int,
         room_type_reserved: str,
+        price: int,
         in_date: date,
         out_date: date
         ) -> Reservation:
@@ -21,6 +22,7 @@ def make_reservation(
         hotel_index,
         num_rooms_reserved,
         room_type_reserved,
+        price,
         in_date,
         out_date,
         )
@@ -35,6 +37,7 @@ def dict_to_reservation(reserve_dict: dict):
     hotel_index = reserve_dict["hotel_index"] #Integer
     num_rooms_reserved = reserve_dict["num_rooms_reserved"] #Integer
     room_type_reserved = reserve_dict["room_type_reserved"] #String
+    price = reserve_dict["price"] #int
     in_date = date(
         reserve_dict["in_date"]["year"],
         reserve_dict["in_date"]["month"],
@@ -52,6 +55,7 @@ def dict_to_reservation(reserve_dict: dict):
         hotel_index,
         num_rooms_reserved,
         room_type_reserved,
+        price,
         in_date,
         out_date
         )
@@ -107,3 +111,9 @@ def update_file_with_new_reservations():
     json.dump(data, reservation_file, indent = 2)
 
     reservation_file.close()
+
+
+# Checks if the date is on a weekend
+# 0-5 = weekday, 6-7 = weekend, for datetime
+def is_on_weekend(date: date) -> bool:
+    return date.weekday() >= 5

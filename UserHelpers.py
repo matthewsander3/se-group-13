@@ -113,3 +113,13 @@ def check_if_active_user_is_admin() -> bool:
             return user.get_admin_status()
 
     return False
+
+def get_active_user() -> User:
+    return find_user_by_index(active_user_index)
+
+def get_active_user_dict() -> User:
+    a_user = find_user_by_index(active_user_index)
+    if a_user:
+        return user_to_dict(a_user)
+    else:
+        return {}

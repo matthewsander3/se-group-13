@@ -5,33 +5,41 @@
 </head>
 
 <body>
-
   <form method="post">
-    <input type="submit" id="logout" name="logout" value="Logout">
+    {% if user %}
+      <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}
+      <input type="submit" id="login" name="login" value="Login">
+    {% endif %}
     <input type="submit" id="home" name="home" value="Home">
   </form>
 
   <h1>{{ top_text }}</h1>
-    <div>
-      {% if hotels|length >= 1 %}
-        {% for hotel in hotels %}
-          <div id={{ hotel.name }}>
-            <p>
-              <li>Hotel: {{ hotel.name }}</li>
-              <li>&nbsp;&nbsp;Rooms Available: {{ hotel.rooms }}</li>
-              <li>&nbsp;&nbsp;Weekend Differential: ${{ hotel.weekend_differential }}</li>
-              <li>&nbsp;&nbsp;Has:&nbsp;{{ hotel.amenity_list|join(', ') }}</li>
-              <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Standard %}Standard rooms: ${{ hotel.rooms_dict.Standard }} {%endif%}</li>
-              <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Queen %}Queen rooms: ${{ hotel.rooms_dict.Queen }} {%endif%}</li>
-              <li>&nbsp;&nbsp;{% if hotel.rooms_dict.King %}King rooms: ${{ hotel.rooms_dict.King }} {%endif%}</li>
-            </p>
-          </div>
-        {% endfor %}
-      {% else %}
-        No hotels were found with your search criteria.
-        An additional search was attempted with a wider price range,
-        which also returned no results. You may need to adjust your inputs!
-      {% endif %}
-    </div>
+  <div>
+    {% if hotels|length >= 1 %}
+      {% for hotel in hotels %}
+        <div id={{ hotel.name }}>
+          <p>
+            <li>Hotel: {{ hotel.name }}</li>
+            <li>&nbsp;&nbsp;Rooms Available: {{ hotel.rooms }}</li>
+            <li>&nbsp;&nbsp;Weekend Differential: ${{ hotel.weekend_differential }}</li>
+            <li>&nbsp;&nbsp;Has:&nbsp;{{ hotel.amenity_list|join(', ') }}</li>
+            <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Standard %}Standard rooms: ${{ hotel.rooms_dict.Standard }} {%endif%}</li>
+            <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Queen %}Queen rooms: ${{ hotel.rooms_dict.Queen }} {%endif%}</li>
+            <li>&nbsp;&nbsp;{% if hotel.rooms_dict.King %}King rooms: ${{ hotel.rooms_dict.King }} {%endif%}</li>
+
+            <form method="post">
+              <input type="submit" id="{{ hotel.index }}-reserve" name="{{ hotel.index }}-reserve" value="Reserve?">
+            </form>
+
+          </p>
+        </div>
+      {% endfor %}
+    {% else %}
+      No hotels were found with your search criteria.
+      An additional search was attempted with a wider price range,
+      which also returned no results. You may need to adjust your inputs!
+    {% endif %}
+  </div>
 </body>
 </html>

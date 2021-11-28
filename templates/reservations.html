@@ -5,32 +5,37 @@
 </head>
 
 <body>
-
   <form method="post">
-    <input type="submit" id="logout" name="logout" value="Logout">
+    {% if user %}
+      <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}
+      <input type="submit" id="login" name="login" value="Login">
+    {% endif %}
     <input type="submit" id="home" name="home" value="Home">
   </form>
 
   <h1>Reservations{% if admin %} (Admin view) {% endif %}</h1>
-    <div>
-      {% if reservations|length >= 1 %}
-        {% for reservation in reservations %}
-          <div>
-            <p>
-              <li>Reservation{{ reservation.index }} for{{ reservation.hotel_info.name }}</li>
-              <li>Starts: {{ reservation.in_date_string }}</li>
-              <li>Ends: {{ reservation.out_date_string }}</li>
+  <div>
+    {% if reservations|length >= 1 %}
+      {% for reservation in reservations %}
+        <div>
+          <p>
+            <li>{% if reservation.is_past %}<b>Past</b>{% else %}<b>Future</b>{% endif %} Reservation (id: {{ reservation.index }}) for {{ reservation.hotel_info.name }}</li>
+            <li>Starts: {{ reservation.in_date_string }}</li>
+            <li>Ends: {{ reservation.out_date_string }}</li>
 
+            {% if not reservation.is_past %}
               <form method="post">
-                <input type="submit" id="cancel" name="cancel" value="Cancel?">
+                <input type="submit" id="{{reservation.index}}-cancel" name="{{reservation.index}}-cancel" value="Cancel?">
               </form>
+            {%endif%}
 
-            </p>
-          </div>
-        {% endfor %}
-      {% else %}
-        You have no reservations - book today!
-      {%endif%}
-    </div>
+          </p>
+        </div>
+      {% endfor %}
+    {% else %}
+      You have no reservations - book today!
+    {%endif%}
+  </div>
 </body>
 </html>

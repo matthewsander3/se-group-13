@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Customers</title>
+</head>
+
+<body>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+          <span>{{ message }}</span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+    {% if user %}
+      <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}
+      <input type="submit" id="login" name="login" value="Login">
+    {% endif %}
+    <input type="submit" id="home" name="home" value="Home">
+  </form>
+
+  <h1>All Customers (Admin Only)</h1>
+  <div>
+    {% if customers|length >= 1 %}
+      {% for customer in customers %}
+        <div id={{ customer.name }}>
+          <p>
+            <li>User: {{ customer.username }} (id = {{ customer.index }})</li>
+            <li>Password: {{ customer.password }}</li>
+            <li>First Name: {{ customer.first_name }}</li>
+            <li>Last Name: {{ customer.last_name }}</li>
+            <li>Email: {{ customer.email_address }}</li>
+            <li>Phone Number: {{ customer.phone_num }}</li>
+            <li>Is {% if not customer.admin_status %}not{% endif %}an admin.</li>
+
+            <form method="post">
+              <input type="submit" id="{{ customer.index }}-delete" name="{{ customer.index }}-delete" value="Delete Customer?">
+            </form>
+
+          </p>
+        </div>
+      {% endfor %}
+    {% else %}
+      No hotels were found with your search criteria.
+      An additional search was attempted with a wider price range,
+      which also returned no results. You may need to adjust your inputs!
+    {% endif %}
+  </div>
+</body>
+</html>

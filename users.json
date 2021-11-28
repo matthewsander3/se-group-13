@@ -10,16 +10,6 @@
     "admin_status": true
   },
   {
-    "index": 1,
-    "username": "TestUser",
-    "password": "password1",
-    "first_name": "Test",
-    "last_name": "User",
-    "email_address": "TestUser@gmail.com",
-    "phone_num": "123-465-7839",
-    "admin_status": false
-  },
-  {
     "index": 2,
     "username": "stevetestman",
     "password": "123456",
