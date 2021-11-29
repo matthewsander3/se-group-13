@@ -108,6 +108,22 @@ class HotelSearch(Resource):
         if is_admin_logged_in() and edited_hotel >= 0:
            return redirect("/hotels/" + str(edited_hotel) + "/edit")
 
+        #Ints
+        parser.add_argument('num_rooms')
+        parser.add_argument('price_range_min')
+        parser.add_argument('price_range_max')
+
+        #Bools (Amenities)
+        parser.add_argument('amen_pool', type=bool)
+        parser.add_argument('amen_gym', type=bool)
+        parser.add_argument('amen_spa', type=bool)
+        parser.add_argument('amen_office', type=bool)
+
+        #Strings
+        parser.add_argument('room_type', type=str)
+        parser.add_argument('in_date', type=str)
+        parser.add_argument('out_date', type=str)
+
         args = parser.parse_args()
 
         # In and out dates are passed as strings: YYYY-MM-DD
