@@ -33,6 +33,10 @@ class HotelList(Resource):
         if reserved_hotel >= 0:
            return redirect("/hotels/" + str(reserved_hotel) + "/reserve")
 
+        edited_hotel = edit_hotel_post()
+        if is_admin_logged_in() and edited_hotel >= 0:
+           return redirect("/hotels/" + str(edited_hotel) + "/edit")
+
         return self.get()
 
     def get(self):
@@ -46,13 +50,29 @@ class HotelList(Resource):
 # Shows the hotel at the given index in the URL. Takes no arguments.
 class Hotel(Resource):
     def post(self, hotel_id):
-        return redirect("/hotels/" + str(hotel_id) + "/reserve")
+        if logout_post():
+            return logout_wrapper()
+        if login_post():
+            return login_wrapper()
+        if home_post():
+            return home_wrapper()
+
+        reserved_hotel = reserve_post()
+        if reserved_hotel >= 0:
+           return redirect("/hotels/" + hotel_id + "/reserve")
+
+        edited_hotel = edit_hotel_post()
+        if is_admin_logged_in() and edited_hotel >= 0:
+           return redirect("/hotels/" + hotel_id + "/edit")
+
+        return abort(404)
 
     def get(self, hotel_id):
         output = [hp.hotel_to_dict(hp.find_hotel_by_index(hotel_id))]
 
         if len(output) < 1:
-            return "No hotels found at index " + str(hotel_id) + "!"
+            flash("No hotels found at index " + str(hotel_id) + "!")
+            return redirect("/hotels")
 
         hotel_str = "Hotel #" + str(hotel_id) + ":"
         curr_user = up.get_active_user_dict()
@@ -83,6 +103,10 @@ class HotelSearch(Resource):
         reserved_hotel = reserve_post()
         if reserved_hotel >= 0:
            return redirect("/hotels/" + str(reserved_hotel) + "/reserve")
+
+        edited_hotel = edit_hotel_post()
+        if is_admin_logged_in() and edited_hotel >= 0:
+           return redirect("/hotels/" + str(edited_hotel) + "/edit")
 
         #Ints
         parser.add_argument('num_rooms')
@@ -174,10 +198,87 @@ class HotelSearch(Resource):
         curr_user = up.get_active_user_dict()
         return make_response(render_template('hotel_search.html', user=curr_user), 200)
 
+# Create reservation endpoint
+class EditHotel(Resource):
+    def post(self, hotel_id):
+        if not is_logged_in():
+            return please_login_alert()
+        if not is_admin_logged_in():
+            return admin_only_alert()
+
+        if logout_post():
+            return logout_wrapper()
+        if home_post():
+            return home_wrapper()
+
+        parser.add_argument('new_name')
+        parser.add_argument('new_num_rooms')
+        parser.add_argument('new_weekend_diff')
+
+        parser.add_argument('gym_status', type=bool)
+        parser.add_argument('spa_status', type=bool)
+        parser.add_argument('office_status', type=bool)
+        parser.add_argument('pool_status', type=bool)
+
+        parser.add_argument('standard_cost')
+        parser.add_argument('queen_cost')
+        parser.add_argument('king_cost')
+
+        args = parser.parse_args()
+
+        old_version = hp.find_hotel_by_index(hotel_id)
+
+        name = args["new_name"]
+        num_rooms = cast_to_int_or_default(args["new_num_rooms"], old_version.get_num_rooms())
+        diff = cast_to_int_or_default(args["new_weekend_diff"], old_version.get_diff())
+
+        rooms_dict = {}
+        s_cost = cast_to_int_or_default(args["standard_cost"], -1)
+        if s_cost >= 0:
+            rooms_dict["Standard"] = s_cost
+
+        q_cost = cast_to_int_or_default(args["queen_cost"], -1)
+        if q_cost >= 0:
+            rooms_dict["Queen"] = q_cost
+
+        k_cost = cast_to_int_or_default(args["king_cost"], -1)
+        if k_cost >= 0:
+            rooms_dict["King"] = k_cost
+
+        amenities_list = []
+        if args["gym_status"]:
+            amenities_list.append("Gym")
+        if args["spa_status"]:
+            amenities_list.append("Spa")
+        if args["pool_status"]:
+            amenities_list.append("Pool")
+        if args["office_status"]:
+            amenities_list.append("Business Office")
+
+        old_version.set_name(name)
+        old_version.set_num_rooms(num_rooms)
+        old_version.set_diff(diff)
+        old_version.set_rooms_dict(rooms_dict)
+        old_version.set_amenities_lists(amenities_list)
+        hp.update_file_with_new_hotel()
+
+        return redirect("/hotels/"+ str(hotel_id))
+
+    def get(self, hotel_id):
+        output = hp.hotel_to_dict(hp.find_hotel_by_index(hotel_id))
+
+        if not output:
+            flash("No hotels found at index " + str(hotel_id) + "!")
+            return redirect("/hotels")
+
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('edit_hotel.html', user=curr_user, hotel=output), 200)
+
+
 # Passed empty text fields are only populated with the null character ('')
 # So run everything though this function to default it to a certain int if it is empty (or cast if it's not)
 def cast_to_int_or_default(value: str, default: int) -> int:
-    if str is None:
+    if value is None:
         return default
 
     try:
@@ -186,7 +287,7 @@ def cast_to_int_or_default(value: str, default: int) -> int:
         return default
 
 
-# Customers (/admin/customers)
+# Customers (/customers/admin)
 # Shows all users, only available to admins.
 class Customers(Resource):
     def post(self):
@@ -229,6 +330,62 @@ class Customers(Resource):
 
         curr_user = up.get_active_user_dict()
         return make_response(render_template('customers.html', user=curr_user, customers=output), 200)
+
+class EditCustomer(Resource):
+    def post(self, user_id):
+
+        if not is_logged_in():
+            return please_login_alert()
+
+        curr_user = up.find_user_by_index(user_id)
+        if not curr_user:
+            flash("User not found!")
+            return redirect("/home")
+
+        if up.active_user_index != user_id and not is_admin_logged_in():
+            return admin_only_alert()
+
+        if logout_post():
+            return logout_wrapper()
+        if home_post():
+            return home_wrapper()
+
+        parser.add_argument('username', type=str, trim = True)
+        parser.add_argument('fname', type=str, trim = True)
+        parser.add_argument('lname', type=str, trim = True)
+        parser.add_argument('password', type=str, trim = True)
+        parser.add_argument('email', type=str, trim = True)
+        parser.add_argument('phone_num', type=str, trim = True)
+        args = parser.parse_args()
+
+        if len(args["username"]) >= 2:
+            curr_user.set_username(args["username"])
+        if len(args["fname"]) >= 2:
+            curr_user.set_f_name(args["fname"])
+        if len(args["lname"]) >= 2:
+            curr_user.set_l_name(args["lname"])
+        if len(args["password"]) >= 2:
+            curr_user.set_password(args["password"])
+        if len(args["email"]) >= 2:
+            curr_user.set_email(args["email"])
+        if len(args["phone_num"]) >= 2:
+            curr_user.set_phone_num(args["phone_num"])
+
+        up.update_file_with_new_user()
+
+        return redirect("/home")
+
+    def get(self, user_id):
+        if not is_logged_in():
+            return please_login_alert()
+
+        if up.active_user_index != user_id and not is_admin_logged_in():
+            return admin_only_alert()
+
+        curr_user = up.get_active_user_dict()
+        output = up.user_to_dict(up.find_user_by_index(user_id))
+        return make_response(render_template('edit_customer.html', user=curr_user, customer=output), 200)
+
 
 # Create reservation endpoint
 class MakeReservation(Resource):
@@ -396,12 +553,12 @@ class ViewReservation(Resource):
         if not is_logged_in():
             return please_login_alert()
 
-        is_admin = is_admin_logged_in()
+        curr_user = up.get_active_user_dict()
 
         output = []
         for reservation in rp.reservation_cache:
             # Admins will see all reservations that are made
-            if not is_admin:
+            if not curr_user["admin_status"]:
                 if reservation.get_user_index() != up.active_user_index:
                     continue
 
@@ -414,8 +571,7 @@ class ViewReservation(Resource):
             reservation_info["is_past"] = (reservation.get_in_date() <= dt.date.today())
             output.append(reservation_info)
 
-        curr_user = up.get_active_user_dict()
-        return make_response(render_template('reservations.html', user=curr_user, reservations=output, admin=is_admin), 200)
+        return make_response(render_template('reservations.html', user=curr_user, reservations=output), 200)
 
 # Login (/login)
 # Allows a user or admin to login to their account.
@@ -512,6 +668,21 @@ def reserve_post():
 
     return -1
 
+def edit_hotel_post():
+    for hotel in hp.hotel_cache:
+        parser.add_argument(str(hotel.get_index())+"-edit", type=bool)
+    args = parser.parse_args()
+
+    for key in args:
+        if "edit" not in key:
+            continue
+
+        if args[key]:
+            argument_split = key.split("-")
+            return int(argument_split[0])
+
+    return -1
+
 
 # Checks if the current user is an admin.
 # Returns TRUE if so, FALSE if there is no current user
@@ -558,22 +729,22 @@ class MakeAccount(Resource):
         password = args["password"]
 
         try:
-            if len(f_name) < 1:
+            if len(f_name) < 2:
                 flash("No first name inputted!")
                 return redirect("/makeaccount")
-            if len(l_name) < 1:
+            if len(l_name) < 2:
                 flash("No last name inputted!")
                 return redirect("/makeaccount")
-            if len(email) < 1:
+            if len(email) < 2:
                 flash("No email inputted!")
                 return redirect("/makeaccount")
-            if len(phone_num) < 1:
+            if len(phone_num) < 2:
                 flash("No phone number inputted!")
                 return redirect("/makeaccount")
-            if len(username) < 1:
+            if len(username) < 2:
                 flash("No username inputted!")
                 return redirect("/makeaccount")
-            if len(password) < 1:
+            if len(password) < 2:
                 flash("No password inputted!")
                 return redirect("/makeaccount")
         except (ValueError, TypeError):
@@ -630,10 +801,14 @@ class Home(Resource):
         if not is_logged_in():
             return please_login_alert()
 
+        if logout_post():
+            return logout_wrapper()
+
         parser.add_argument('viewhotels', type=bool)
         parser.add_argument('searchhotels', type=bool)
         parser.add_argument('viewreservations', type=bool)
         parser.add_argument('customers', type=bool)
+        parser.add_argument('editaccount', type=bool)
         args = parser.parse_args()
 
         if args['viewhotels']:
@@ -642,12 +817,14 @@ class Home(Resource):
             return redirect("/hotels/search")
         if args['viewreservations']:
             return redirect("/reservations")
+        if args['editaccount']:
+            return redirect("/customers/"+str(up.active_user_index))
 
         if args['customers']:
             if not is_admin_logged_in():
                 return admin_only_alert()
 
-            return redirect("/admin/customers")
+            return redirect("/customers/admin")
 
         return abort(404)
 
@@ -667,10 +844,12 @@ api.add_resource(MakeAccount,'/makeaccount')
 api.add_resource(HotelList,'/hotels')
 api.add_resource(Hotel, '/hotels/<int:hotel_id>')
 api.add_resource(HotelSearch, '/hotels/search')
+api.add_resource(EditHotel, '/hotels/<int:hotel_id>/edit')
 api.add_resource(MakeReservation, '/hotels/<int:hotel_id>/reserve')
 api.add_resource(ConfirmReservation, '/hotels/<int:hotel_id>/reserve/confirm_<int:reservation_id>')
 api.add_resource(ViewReservation, '/reservations')
-api.add_resource(Customers, '/admin/customers')
+api.add_resource(Customers, '/customers/admin')
+api.add_resource(EditCustomer, '/customers/<int:user_id>')
 
 # Initialize all hotels from the json
 def init_hotels(json_data: list):

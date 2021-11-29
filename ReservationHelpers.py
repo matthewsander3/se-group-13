@@ -16,8 +16,13 @@ def make_reservation(
         out_date: date
         ) -> Reservation:
 
+    max_index = 0
+    for reservation in reservation_cache:
+        if max_index <= reservation.get_index():
+            max_index = reservation.get_index() + 1
+
     return Reservation.Reservation(
-        len(reservation_cache),
+        max_index,
         user_index,
         hotel_index,
         num_rooms_reserved,
@@ -32,7 +37,7 @@ def make_reservation(
 # > Returns a Reservation object.
 def dict_to_reservation(reserve_dict: dict):
 
-    index = len(reservation_cache)
+    index = reserve_dict["index"]
     user_index = reserve_dict["user_index"] #Integer
     hotel_index = reserve_dict["hotel_index"] #Integer
     num_rooms_reserved = reserve_dict["num_rooms_reserved"] #Integer

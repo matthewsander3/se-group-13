@@ -5,37 +5,37 @@
 </head>
 <body>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-primary alert-dismissible fade show" role="alert">
-        <span>{{ message }}</span>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-     {% endfor %}
-  {% endif %}
-{% endwith %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+          <span>{{ message }}</span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
 
-<form method="post">
-  {% if user %}
-    <input type="submit" id="logout" name="logout" value="Logout">
-  {% else %}
-    <input type="submit" id="login" name="login" value="Login">
-  {% endif %}
-  <input type="submit" id="home" name="home" value="Home">
-</form>
+  <form method="post">
+    {% if user %}
+      <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}
+      <input type="submit" id="login" name="login" value="Please Login!">
+    {% endif %}
+  </form>
 
-<h1>Welcome, {{user.username}}!{% if user.admin_status %} (Admin view) {% endif %}</h1>
-<form method="post">
-  <input type="submit" id="viewhotels" name="viewhotels" value="View Hotels">
-  <input type="submit" id="searchhotels" name="searchhotels" value="Search Hotels">
-  <input type="submit" id="viewreservations" name="viewreservations" value="View Reservations">
-  {% if user.admin_status %}
-    <input type="submit" id="customers" name="customers" value="Customers">
-  {% endif %}
-</form>
+  <h1>Welcome, {{user.username}}!{% if user.admin_status %} (Admin view) {% endif %}</h1>
+  <form method="post">
+    <input type="submit" id="viewhotels" name="viewhotels" value="View Hotels">
+    <input type="submit" id="searchhotels" name="searchhotels" value="Search Hotels">
+    <input type="submit" id="viewreservations" name="viewreservations" value="View Reservations">
+    <input type="submit" id="editaccount" name="editaccount" value="View / Edit Account">
+    {% if user.admin_status %}
+      <input type="submit" id="customers" name="customers" value="Customers">
+    {% endif %}
+  </form>
 
 </body>
 </html>
