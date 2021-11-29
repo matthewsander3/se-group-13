@@ -768,7 +768,7 @@ class MakeAccount(Resource):
 
         up.user_cache.append(new_user)
         up.update_file_with_new_user()
-        up.active_user_index = up.user_cache.index(new_user)
+        up.set_active_user(new_user.get_index())
 
         return redirect("/home")
 
@@ -873,7 +873,7 @@ if __name__ == "__main__":
     user_file = open("users.json", "r")
     init_users(json.load(user_file))
 
-    app.run(debug = True) #Chnage this when testing is done
+    app.run()
 
     hotel_file.close()
     reservation_file.close()

@@ -16,8 +16,13 @@ def make_user(
         admin_status: bool
         ) -> User:
 
+    max_index = 0
+    for user in user_cache:
+        if max_index <= user.get_index():
+            max_index = user.get_index() + 1
+
     return User.User(
-        len(user_cache),
+        max_index,
         username,
         password,
         first_name,
