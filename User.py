@@ -28,6 +28,23 @@ class User:
     def get_admin_status(self):
         return self.admin_status
 
+    def set_index(self, x: int):
+        self.index = x
+    def set_username(self, x):
+        self.username = x
+    def set_password(self, x):
+        self.password = x
+    def set_f_name(self, x):
+        self.first_name = x
+    def set_l_name(self, x):
+        self.last_name = x
+    def set_email(self, x):
+        self.email_address = x
+    def set_phone_num(self, x):
+        self.phone_num = x
+    def set_admin_status(self, x: bool):
+        self.admin_status = x
+
     def to_dict(self):
         return_dict = {}
 

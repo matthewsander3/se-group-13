@@ -12,10 +12,10 @@ def dict_to_hotel(hotel_dict: dict) -> Hotel:
 
     index = hotel_dict["index"] #Integer
     name = hotel_dict["name"] #String
-    num_rooms = hotel_dict["room_num"] #Integer
-    diff = hotel_dict["weekend_diff"] #Integer
-    rooms_dict = hotel_dict["room_types"] #Dict
-    amenities_list = hotel_dict["amenities"] #List
+    num_rooms = hotel_dict["rooms"] #Integer
+    diff = hotel_dict["weekend_differential"] #Integer
+    rooms_dict = hotel_dict["rooms_dict"] #Dict
+    amenities_list = hotel_dict["amenity_list"] #List
 
     return Hotel.Hotel(
         index,

@@ -50,6 +50,12 @@ class HotelList(Resource):
 # Shows the hotel at the given index in the URL. Takes no arguments.
 class Hotel(Resource):
     def post(self, hotel_id):
+        if logout_post():
+            return logout_wrapper()
+        if login_post():
+            return login_wrapper()
+        if home_post():
+            return home_wrapper()
 
         reserved_hotel = reserve_post()
         if reserved_hotel >= 0:
@@ -265,7 +271,7 @@ def cast_to_int_or_default(value: str, default: int) -> int:
         return default
 
 
-# Customers (/admin/customers)
+# Customers (/customers/admin)
 # Shows all users, only available to admins.
 class Customers(Resource):
     def post(self):
@@ -308,6 +314,62 @@ class Customers(Resource):
 
         curr_user = up.get_active_user_dict()
         return make_response(render_template('customers.html', user=curr_user, customers=output), 200)
+
+class EditCustomer(Resource):
+    def post(self, user_id):
+
+        if not is_logged_in():
+            return please_login_alert()
+
+        curr_user = up.find_user_by_index(user_id)
+        if not curr_user:
+            flash("User not found!")
+            return redirect("/home")
+
+        if up.active_user_index != user_id and not is_admin_logged_in():
+            return admin_only_alert()
+
+        if logout_post():
+            return logout_wrapper()
+        if home_post():
+            return home_wrapper()
+
+        parser.add_argument('username', type=str, trim = True)
+        parser.add_argument('fname', type=str, trim = True)
+        parser.add_argument('lname', type=str, trim = True)
+        parser.add_argument('password', type=str, trim = True)
+        parser.add_argument('email', type=str, trim = True)
+        parser.add_argument('phone_num', type=str, trim = True)
+        args = parser.parse_args()
+
+        if len(args["username"]) >= 2:
+            curr_user.set_username(args["username"])
+        if len(args["fname"]) >= 2:
+            curr_user.set_f_name(args["fname"])
+        if len(args["lname"]) >= 2:
+            curr_user.set_l_name(args["lname"])
+        if len(args["password"]) >= 2:
+            curr_user.set_password(args["password"])
+        if len(args["email"]) >= 2:
+            curr_user.set_email(args["email"])
+        if len(args["phone_num"]) >= 2:
+            curr_user.set_phone_num(args["phone_num"])
+
+        up.update_file_with_new_user()
+
+        return redirect("/home")
+
+    def get(self, user_id):
+        if not is_logged_in():
+            return please_login_alert()
+
+        if up.active_user_index != user_id and not is_admin_logged_in():
+            return admin_only_alert()
+
+        curr_user = up.get_active_user_dict()
+        output = up.user_to_dict(up.find_user_by_index(user_id))
+        return make_response(render_template('edit_customer.html', user=curr_user, customer=output), 200)
+
 
 # Create reservation endpoint
 class MakeReservation(Resource):
@@ -475,12 +537,12 @@ class ViewReservation(Resource):
         if not is_logged_in():
             return please_login_alert()
 
-        is_admin = is_admin_logged_in()
+        curr_user = up.get_active_user_dict()
 
         output = []
         for reservation in rp.reservation_cache:
             # Admins will see all reservations that are made
-            if not is_admin:
+            if not curr_user["admin_status"]:
                 if reservation.get_user_index() != up.active_user_index:
                     continue
 
@@ -493,8 +555,7 @@ class ViewReservation(Resource):
             reservation_info["is_past"] = (reservation.get_in_date() <= dt.date.today())
             output.append(reservation_info)
 
-        curr_user = up.get_active_user_dict()
-        return make_response(render_template('reservations.html', user=curr_user, reservations=output, admin=is_admin), 200)
+        return make_response(render_template('reservations.html', user=curr_user, reservations=output), 200)
 
 # Login (/login)
 # Allows a user or admin to login to their account.
@@ -652,22 +713,22 @@ class MakeAccount(Resource):
         password = args["password"]
 
         try:
-            if len(f_name) < 1:
+            if len(f_name) < 2:
                 flash("No first name inputted!")
                 return redirect("/makeaccount")
-            if len(l_name) < 1:
+            if len(l_name) < 2:
                 flash("No last name inputted!")
                 return redirect("/makeaccount")
-            if len(email) < 1:
+            if len(email) < 2:
                 flash("No email inputted!")
                 return redirect("/makeaccount")
-            if len(phone_num) < 1:
+            if len(phone_num) < 2:
                 flash("No phone number inputted!")
                 return redirect("/makeaccount")
-            if len(username) < 1:
+            if len(username) < 2:
                 flash("No username inputted!")
                 return redirect("/makeaccount")
-            if len(password) < 1:
+            if len(password) < 2:
                 flash("No password inputted!")
                 return redirect("/makeaccount")
         except (ValueError, TypeError):
@@ -728,6 +789,7 @@ class Home(Resource):
         parser.add_argument('searchhotels', type=bool)
         parser.add_argument('viewreservations', type=bool)
         parser.add_argument('customers', type=bool)
+        parser.add_argument('editaccount', type=bool)
         args = parser.parse_args()
 
         if args['viewhotels']:
@@ -736,12 +798,14 @@ class Home(Resource):
             return redirect("/hotels/search")
         if args['viewreservations']:
             return redirect("/reservations")
+        if args['editaccount']:
+            return redirect("/customers/"+str(up.active_user_index))
 
         if args['customers']:
             if not is_admin_logged_in():
                 return admin_only_alert()
 
-            return redirect("/admin/customers")
+            return redirect("/customers/admin")
 
         return abort(404)
 
@@ -765,7 +829,8 @@ api.add_resource(EditHotel, '/hotels/<int:hotel_id>/edit')
 api.add_resource(MakeReservation, '/hotels/<int:hotel_id>/reserve')
 api.add_resource(ConfirmReservation, '/hotels/<int:hotel_id>/reserve/confirm_<int:reservation_id>')
 api.add_resource(ViewReservation, '/reservations')
-api.add_resource(Customers, '/admin/customers')
+api.add_resource(Customers, '/customers/admin')
+api.add_resource(EditCustomer, '/customers/<int:user_id>')
 
 # Initialize all hotels from the json
 def init_hotels(json_data: list):

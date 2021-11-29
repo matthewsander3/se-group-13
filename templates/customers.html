@@ -40,7 +40,7 @@
             <li>Last Name: {{ customer.last_name }}</li>
             <li>Email: {{ customer.email_address }}</li>
             <li>Phone Number: {{ customer.phone_num }}</li>
-            <li>Is {% if not customer.admin_status %}not{% endif %}an admin.</li>
+            <li><b>Is {% if not customer.admin_status %}not {% endif %}an admin.</b></li>
 
             <form method="post">
               <input type="submit" id="{{ customer.index }}-delete" name="{{ customer.index }}-delete" value="Delete Customer?">
