@@ -785,6 +785,9 @@ class Home(Resource):
         if not is_logged_in():
             return please_login_alert()
 
+        if logout_post():
+            return logout_wrapper()
+
         parser.add_argument('viewhotels', type=bool)
         parser.add_argument('searchhotels', type=bool)
         parser.add_argument('viewreservations', type=bool)

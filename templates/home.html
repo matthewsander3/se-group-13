@@ -22,9 +22,8 @@
     {% if user %}
       <input type="submit" id="logout" name="logout" value="Logout">
     {% else %}
-      <input type="submit" id="login" name="login" value="Login">
+      <input type="submit" id="login" name="login" value="Please Login!">
     {% endif %}
-    <input type="submit" id="home" name="home" value="Home">
   </form>
 
   <h1>Welcome, {{user.username}}!{% if user.admin_status %} (Admin view) {% endif %}</h1>
