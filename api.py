@@ -33,6 +33,10 @@ class HotelList(Resource):
         if reserved_hotel >= 0:
            return redirect("/hotels/" + str(reserved_hotel) + "/reserve")
 
+        edited_hotel = edit_hotel_post()
+        if is_admin_logged_in() and edited_hotel >= 0:
+           return redirect("/hotels/" + str(edited_hotel) + "/edit")
+
         return self.get()
 
     def get(self):
@@ -46,13 +50,23 @@ class HotelList(Resource):
 # Shows the hotel at the given index in the URL. Takes no arguments.
 class Hotel(Resource):
     def post(self, hotel_id):
-        return redirect("/hotels/" + str(hotel_id) + "/reserve")
+
+        reserved_hotel = reserve_post()
+        if reserved_hotel >= 0:
+           return redirect("/hotels/" + hotel_id + "/reserve")
+
+        edited_hotel = edit_hotel_post()
+        if is_admin_logged_in() and edited_hotel >= 0:
+           return redirect("/hotels/" + hotel_id + "/edit")
+
+        return abort(404)
 
     def get(self, hotel_id):
         output = [hp.hotel_to_dict(hp.find_hotel_by_index(hotel_id))]
 
         if len(output) < 1:
-            return "No hotels found at index " + str(hotel_id) + "!"
+            flash("No hotels found at index " + str(hotel_id) + "!")
+            return redirect("/hotels")
 
         hotel_str = "Hotel #" + str(hotel_id) + ":"
         curr_user = up.get_active_user_dict()
@@ -84,21 +98,9 @@ class HotelSearch(Resource):
         if reserved_hotel >= 0:
            return redirect("/hotels/" + str(reserved_hotel) + "/reserve")
 
-        #Ints
-        parser.add_argument('num_rooms')
-        parser.add_argument('price_range_min')
-        parser.add_argument('price_range_max')
-
-        #Bools (Amenities)
-        parser.add_argument('amen_pool', type=bool)
-        parser.add_argument('amen_gym', type=bool)
-        parser.add_argument('amen_spa', type=bool)
-        parser.add_argument('amen_office', type=bool)
-
-        #Strings
-        parser.add_argument('room_type', type=str)
-        parser.add_argument('in_date', type=str)
-        parser.add_argument('out_date', type=str)
+        edited_hotel = edit_hotel_post()
+        if is_admin_logged_in() and edited_hotel >= 0:
+           return redirect("/hotels/" + str(edited_hotel) + "/edit")
 
         args = parser.parse_args()
 
@@ -174,10 +176,87 @@ class HotelSearch(Resource):
         curr_user = up.get_active_user_dict()
         return make_response(render_template('hotel_search.html', user=curr_user), 200)
 
+# Create reservation endpoint
+class EditHotel(Resource):
+    def post(self, hotel_id):
+        if not is_logged_in():
+            return please_login_alert()
+        if not is_admin_logged_in():
+            return admin_only_alert()
+
+        if logout_post():
+            return logout_wrapper()
+        if home_post():
+            return home_wrapper()
+
+        parser.add_argument('new_name')
+        parser.add_argument('new_num_rooms')
+        parser.add_argument('new_weekend_diff')
+
+        parser.add_argument('gym_status', type=bool)
+        parser.add_argument('spa_status', type=bool)
+        parser.add_argument('office_status', type=bool)
+        parser.add_argument('pool_status', type=bool)
+
+        parser.add_argument('standard_cost')
+        parser.add_argument('queen_cost')
+        parser.add_argument('king_cost')
+
+        args = parser.parse_args()
+
+        old_version = hp.find_hotel_by_index(hotel_id)
+
+        name = args["new_name"]
+        num_rooms = cast_to_int_or_default(args["new_num_rooms"], old_version.get_num_rooms())
+        diff = cast_to_int_or_default(args["new_weekend_diff"], old_version.get_diff())
+
+        rooms_dict = {}
+        s_cost = cast_to_int_or_default(args["standard_cost"], -1)
+        if s_cost >= 0:
+            rooms_dict["Standard"] = s_cost
+
+        q_cost = cast_to_int_or_default(args["queen_cost"], -1)
+        if q_cost >= 0:
+            rooms_dict["Queen"] = q_cost
+
+        k_cost = cast_to_int_or_default(args["king_cost"], -1)
+        if k_cost >= 0:
+            rooms_dict["King"] = k_cost
+
+        amenities_list = []
+        if args["gym_status"]:
+            amenities_list.append("Gym")
+        if args["spa_status"]:
+            amenities_list.append("Spa")
+        if args["pool_status"]:
+            amenities_list.append("Pool")
+        if args["office_status"]:
+            amenities_list.append("Business Office")
+
+        old_version.set_name(name)
+        old_version.set_num_rooms(num_rooms)
+        old_version.set_diff(diff)
+        old_version.set_rooms_dict(rooms_dict)
+        old_version.set_amenities_lists(amenities_list)
+        hp.update_file_with_new_hotel()
+
+        return redirect("/hotels/"+ str(hotel_id))
+
+    def get(self, hotel_id):
+        output = hp.hotel_to_dict(hp.find_hotel_by_index(hotel_id))
+
+        if not output:
+            flash("No hotels found at index " + str(hotel_id) + "!")
+            return redirect("/hotels")
+
+        curr_user = up.get_active_user_dict()
+        return make_response(render_template('edit_hotel.html', user=curr_user, hotel=output), 200)
+
+
 # Passed empty text fields are only populated with the null character ('')
 # So run everything though this function to default it to a certain int if it is empty (or cast if it's not)
 def cast_to_int_or_default(value: str, default: int) -> int:
-    if str is None:
+    if value is None:
         return default
 
     try:
@@ -512,6 +591,21 @@ def reserve_post():
 
     return -1
 
+def edit_hotel_post():
+    for hotel in hp.hotel_cache:
+        parser.add_argument(str(hotel.get_index())+"-edit", type=bool)
+    args = parser.parse_args()
+
+    for key in args:
+        if "edit" not in key:
+            continue
+
+        if args[key]:
+            argument_split = key.split("-")
+            return int(argument_split[0])
+
+    return -1
+
 
 # Checks if the current user is an admin.
 # Returns TRUE if so, FALSE if there is no current user
@@ -667,6 +761,7 @@ api.add_resource(MakeAccount,'/makeaccount')
 api.add_resource(HotelList,'/hotels')
 api.add_resource(Hotel, '/hotels/<int:hotel_id>')
 api.add_resource(HotelSearch, '/hotels/search')
+api.add_resource(EditHotel, '/hotels/<int:hotel_id>/edit')
 api.add_resource(MakeReservation, '/hotels/<int:hotel_id>/reserve')
 api.add_resource(ConfirmReservation, '/hotels/<int:hotel_id>/reserve/confirm_<int:reservation_id>')
 api.add_resource(ViewReservation, '/reservations')

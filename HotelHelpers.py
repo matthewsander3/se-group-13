@@ -1,4 +1,5 @@
 from datetime import date
+import json
 import Hotel
 import ReservationHelpers as rp
 
@@ -96,3 +97,14 @@ def find_certain_hotels(
             output.append(hotel_to_dict(hotel))
 
     return output
+
+# Updates the userfile to the current user cache.
+def update_file_with_new_hotel():
+    data = []
+    for hotel in hotel_cache:
+        data.append(hotel_to_dict(hotel))
+
+    hotel_file = open("hotels.json", "w")
+    json.dump(data, hotel_file, indent = 2)
+
+    hotel_file.close()

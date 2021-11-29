@@ -8,7 +8,7 @@
 #    - diff (weekend differential - integer)
 #    - numRooms (integer)
 class Hotel:
-    rooms_dict = []
+    rooms_dict = {}
     amenities_list = []
     def __init__(self, index, name, diff, num_rooms, rooms_dict, amenities_list):
         self.index = index
@@ -27,8 +27,11 @@ class Hotel:
         self.num_rooms = x
     def set_diff(self, x):
         self.diff = x
-    def set_num_rooms(self, x):
-        self.num_rooms = x
+
+    def set_rooms_dict(self, x):
+        self.rooms_dict = x
+    def set_amenities_lists(self, x):
+        self.amenities_list = x
 
     #Getters
     def get_index(self):
@@ -39,8 +42,6 @@ class Hotel:
         return self.num_rooms
     def get_diff(self):
         return self.diff
-    def get_num_rooms(self):
-        return self.num_rooms
 
     def get_rooms_dict(self):
         return self.rooms_dict

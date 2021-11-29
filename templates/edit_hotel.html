@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Hotels</title>
+</head>
+
+<body>
+  <form method="post">
+    {% if user %}
+      <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}
+      <input type="submit" id="login" name="login" value="Login">
+    {% endif %}
+    <input type="submit" id="home" name="home" value="Home">
+  </form>
+
+  <h1>Edit Hotel</h1>
+  <div>
+    {% if hotel %}
+      <div id="edited_hotel">
+        <p>
+          <form method="post">
+            <li>Hotel Name: </li>
+            <input type="text" id="new_name" name="new_name" value="{{hotel.name}}"><br><br>
+
+            <li>Max number of rooms: </li>
+            <input type="number" id="new_num_rooms" name="new_num_rooms" value="{{hotel.rooms}}""><br><br>
+
+            <li>Weekend Diff: $</li>
+            <input type="number" id="new_weekend_diff" name="new_weekend_diff" value="{{hotel.weekend_differential}}""><br><br>
+
+            <fieldset>
+              <legend>Amenities?</legend>
+              <div>
+                <input type="checkbox" id="pool_status" name="pool_status" value="Pool" {% if "Pool" in hotel.amenity_list %} checked {% endif %}>
+                <label for="pool_status">Pool</label>
+              </div>
+              <div>
+                <input type="checkbox" id="gym_status" name="gym_status" value="Gym" {% if "Gym" in hotel.amenity_list %} checked {% endif %}>
+                <label for="gym_status">Gym</label>
+              </div>
+              <div>
+                <input type="checkbox" id="spa_status" name="spa_status" value="Spa"  {% if "Spa" in hotel.amenity_list %} checked {% endif %}>
+                <label for="spa_status">Spa</label>
+              </div>
+              <div>
+                <input type="checkbox" id="office_status" name="office_status" value="Office" {% if "Business Office" in hotel.amenity_list %} checked {% endif %}>
+                <label for="office_status">Office</label>
+              </div>
+            </fieldset><br><br>
+
+            <li>Room Prices (-1 / empty for unavaiable room): </li><br>
+            <li>Standard room: $</li>
+            <input type="number" id="standard_cost" name="standard_cost" value="{{hotel.rooms_dict.Standard}}"><br><br>
+
+            <li>Queen rooms: $</li>
+            <input type="number" id="queen_cost" name="queen_cost" value="{{hotel.rooms_dict.Queen}}"><br><br>
+
+            <li>&King rooms: $</li>
+            <input type="number" id="king_cost" name="king_cost" value="{{hotel.rooms_dict.King}}"><br><br>
+
+            <input type="submit" value="Submit">
+          </form>
+        </p>
+      </div>
+    {% else %}
+      No hotel was found at this index.
+    {% endif %}
+  </div>
+</body>
+</html>
