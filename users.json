@@ -48,5 +48,15 @@
     "email_address": "roger@gmail.com",
     "phone_num": "123-414-2312",
     "admin_status": false
+  },
+  {
+    "index": 6,
+    "username": "benjindruzi",
+    "password": "uzumaki12",
+    "first_name": "benjamin",
+    "last_name": "ndruzi",
+    "email_address": "benjikialanda@gmail.com",
+    "phone_num": "3058961936",
+    "admin_status": false
   }
 ]
