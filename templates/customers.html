@@ -20,7 +20,8 @@
       {% endfor %}
     {% endif %}
   {% endwith %}
-
+  
+  <br>
   <form method="post" for="backtrack">
     {% if user %}
       <input type="submit" id="logout" name="logout" value="Logout">
@@ -30,11 +31,12 @@
     <input type="submit" id="home" name="home" value="Home">
   </form><br><br>
 
-  <div class="container">
-    <div class="row">
-  <h1>All Customers (Admin Only)</h1>
+  
+    <h1>All Customers (Admin Only)</h1>
     {% if customers|length >= 1 %}
       {% for customer in customers %}
+      <div class="container">
+        <div class="row">
         <div id={{ customer.name }}>
           <p>
             <li>User: {{ customer.username }} (id = {{ customer.index }})</li>
@@ -49,7 +51,6 @@
             <form method="post">
               <input type="submit" id="{{ customer.index }}-delete" name="{{ customer.index }}-delete" value="Delete Customer?">
             </form>
-      
 
           </p>
         </div></div></div>
