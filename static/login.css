@@ -101,7 +101,7 @@ text-align: center;
     transform: translate(-50%, -50%);
 
     color: #e6e6e6;
-    background-color: navy;
+    background-color: #466995;
 
     font-size: 20px;
     font-weight: 100px bold;
@@ -112,6 +112,6 @@ text-align: center;
 }
 
 [type="submit"]:hover {
-    background-color: #00145d;
-    border-color: #00145d;
+    background-color: #465a95;
+    border-color: #465a95;
 }

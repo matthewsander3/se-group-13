@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
-  <link rel= "stylesheet" type= "text/css" href="{{ url_for('static', filename='login.css')}}">
+<title>Login</title>
+<link href='style.css' rel='stylesheet'>
 </head>
 <body>
 
-{% with messages = get_flashed_messages() %}
+<!-- {% with messages = get_flashed_messages() %}
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-primary alert-dismissible fade show" role="alert">
@@ -17,7 +17,7 @@
         </div>
      {% endfor %}
   {% endif %}
-{% endwith %}
+{% endwith %} -->
 
 <h1>Log in here.</h1>
 <form method="post">

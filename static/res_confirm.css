@@ -29,25 +29,12 @@ input {
     padding: 2px 2px;
 }
 
-[for="backtrack"] {
-    position: absolute;
-    left: 7%;
-}
-
-[for="proceed"] {
-    font-size: 20px !important;
-    font-weight: 100px bold;
-    border: 1px solid #e6e6e6;
-    border-radius: 5px;
-    padding: 3px 80px !important;
-}
-
 [type="submit"] {
     font-size: 15px;
     font-weight: 100px bold;
     border: 1px solid #e6e6e6;
     border-radius: 5px;
-    padding: 1px 10px;
+    padding: 2px 17px;
 }
 
 [type="submit"]:hover {

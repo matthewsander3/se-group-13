@@ -5,20 +5,20 @@
 }
 
 .container, .container-fluid {
-    /* background-color: ; */
+    background-color: ;
     border: #e6e6e6 solid 5px;
     color: white;
     border-radius: 5px;
 }
 
 .row {
-    background-color: navy;
-    border: navy solid 10px;
+    background-color: #466995;
+    border: #466995 solid 10px;
 }
 
 .col {
-    border: navy;
-    background-color: navy;
+    border: #466995;
+    background-color: #466995;
     color: white;
 }
 
@@ -27,6 +27,19 @@ input {
     color: #333333;
     border: 1px solid #e6e6e6;
     padding: 2px 2px;
+}
+
+[for="backtrack"] {
+    position: absolute;
+    left: 7%;
+}
+
+[type="submit"] {
+    font-size: 15px;
+    font-weight: 100px bold;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    padding: 1px 10px;
 }
 
 [type="submit"]:hover {

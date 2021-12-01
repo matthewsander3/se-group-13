@@ -12,13 +12,13 @@
 }
 
 .row {
-    background-color: navy;
-    border: navy solid 10px;
+    background-color: #466995;
+    border: #466995 solid 10px;
 }
 
 .col {
-    border: navy;
-    background-color: navy;
+    border: #466995;
+    background-color: #466995;
     color: white;
 }
 
@@ -27,6 +27,14 @@ input {
     color: #333333;
     border: 1px solid #e6e6e6;
     padding: 2px 2px;
+}
+
+[type="submit"] {
+    font-size: 18px;
+    font-weight: 100px bold;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    padding: 3px 50px;
 }
 
 [type="submit"]:hover {

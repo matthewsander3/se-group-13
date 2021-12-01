@@ -2,52 +2,61 @@
 <html>
 <head>
   <title>Edit Account</title>
+  <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 
 <body>
-  <form method="post">
-    {% if user %}
+  <form method="post" for="backtrack">
+    <!-- {% if user %} -->
       <input type="submit" id="logout" name="logout" value="Logout">
-    {% else %}
+    <!-- {% else %} -->
       <input type="submit" id="login" name="login" value="Login">
-    {% endif %}
+    <!-- {% endif %} -->
     <input type="submit" id="home" name="home" value="Home">
   </form>
 
+<div class="container">
+  <div class="row">
   <h1>Edit User</h1>
   <div>
-    {% if user and customer %}
+    <!-- {% if user and customer %} -->
       <div id="edited_customer">
         <p>
           <form method="post">
-            {% if customer.admin_status %}
+            <!-- {% if customer.admin_status %} -->
               This user is an admin. <br>
-            {% endif %}
-            <li>Username: </li>
+            <!-- {% endif %} -->
+            <li for="username">Username: </li>
+            
             <input type="text" id="username" name="username" value="{{customer.username}}"><br><br>
 
-            <li>Password: </li>
+            <li for="password">Password: </li>
+            
             <input type="text" id="password" name="password" value="{{customer.password}}""><br><br>
 
-            <li>First Name: </li>
+            <li for="fname">First Name: </li>
+            
             <input type="text" id="fname" name="fname" value="{{customer.first_name}}"><br><br>
 
-            <li>Last Name: </li>
+            <li for="lname">Last Name: </li>
+            
             <input type="text" id="lname" name="lname" value="{{customer.last_name}}""><br><br>
 
-            <li>Email Name: </li>
+            <li for="email">Email Name: </li>
+            
             <input type="email" id="email" name="email" value="{{customer.email_address}}""><br><br>
 
-            <li>Phone Number: </li>
+            <li for="phone_num">Phone Number: </li>
+            
             <input type="tel" id="phone_num" name="phone_num" value="{{customer.phone_num}}""><br><br>
 
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" for="proceed">
           </form>
         </p>
       </div>
-    {% else %}
+    <!-- {% else %}
       No user was found at this index.
-    {% endif %}
-  </div>
+    {% endif %} -->
+  </div> </div> </div>
 </body>
 </html>

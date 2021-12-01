@@ -34,14 +34,6 @@ input {
     left: 7%;
 }
 
-[for="proceed"] {
-    font-size: 20px !important;
-    font-weight: 100px bold;
-    border: 1px solid #e6e6e6;
-    border-radius: 5px;
-    padding: 3px 80px !important;
-}
-
 [type="submit"] {
     font-size: 15px;
     font-weight: 100px bold;
@@ -53,4 +45,12 @@ input {
 [type="submit"]:hover {
     background-color: #c6c6c6;
     border-color: #c6c6c6;
+}
+
+[for="proceed"] {
+    font-size: 20px !important;
+    font-weight: 100px bold;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    padding: 2px 70px !important;
 }
