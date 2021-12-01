@@ -13,8 +13,6 @@
       {% for message in messages %}
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
           <span>{{ message }}</span>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
           </button>
         </div>
       {% endfor %}
@@ -44,7 +42,7 @@
     {% for hotel in hotels %}
       <div class="container">
         <div class="row">
-        
+
           <div id={{ hotel.name }}>
             <p>
 
@@ -55,7 +53,7 @@
               <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Standard %}Standard rooms: ${{ hotel.rooms_dict.Standard }} {%endif%}</li>
               <li>&nbsp;&nbsp;{% if hotel.rooms_dict.Queen %}Queen rooms: ${{ hotel.rooms_dict.Queen }} {%endif%}</li>
               <li>&nbsp;&nbsp;{% if hotel.rooms_dict.King %}King rooms: ${{ hotel.rooms_dict.King }} {%endif%}</li>
-            
+
               <form method="post">
               <br>
                 <input type="submit" id="{{ hotel.index }}-reserve" name="{{ hotel.index }}-reserve" value="Reserve?">
@@ -70,13 +68,13 @@
         </div>
       </div>
     {% endfor %}
-    
+
   {% else %}
     No hotels were found with your search criteria.
     An additional search was attempted with a wider price range,
     which also returned no results. You may need to adjust your inputs!
-  
+
   {% endif %}
-  
+
 </body>
 </html>

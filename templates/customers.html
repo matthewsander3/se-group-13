@@ -13,14 +13,12 @@
       {% for message in messages %}
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
           <span>{{ message }}</span>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
           </button>
         </div>
       {% endfor %}
     {% endif %}
   {% endwith %}
-  
+
   <br>
   <form method="post" for="backtrack">
     {% if user %}
@@ -70,7 +68,7 @@
       No hotels were found with your search criteria.
       An additional search was attempted with a wider price range,
       which also returned no results. You may need to adjust your inputs!
-    
+
     {% endif %}
 
 </body>

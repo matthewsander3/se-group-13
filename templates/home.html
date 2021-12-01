@@ -13,8 +13,6 @@
       {% for message in messages %}
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
           <span>{{ message }}</span>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
           </button>
         </div>
       {% endfor %}
@@ -23,14 +21,13 @@
   <br>
 
 
-    
+
   <form method="post" for="backtrack">
     {% if user %}
       <input type="submit" id="logout" name="logout" value="Logout">
     {% else %}
       <input type="submit" id="login" name="login" value="Login">
     {% endif %}
-      <input type="submit" id="home" name="home" value="Home">
   </form>
   <br>
   <br>

@@ -13,8 +13,6 @@
       {% for message in messages %}
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
           <span>{{ message }}</span>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
           </button>
         </div>
       {% endfor %}
@@ -69,7 +67,7 @@
           {% if hotel.rooms_dict.King %} <option value="King">King</option> {% endif %}
         </select>
         </div>
-        
+
       </div>
     </div>
 
