@@ -31,8 +31,12 @@
     <input type="submit" id="home" name="home" value="Home">
   </form><br><br>
 
-  
-    <h1>All Customers (Admin Only)</h1>
+    <div class="container">
+      <div class="row text-center">
+        <h1>All Customers (Admin Only)</h1>
+      </div>
+    </div>
+    
     {% if customers|length >= 1 %}
       {% for customer in customers %}
       <div class="container">
