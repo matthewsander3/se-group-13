@@ -9,11 +9,11 @@
 <body>
   <br>
   <form method="post" for="backtrack">
-    <!-- {% if user %} -->
+    {% if user %}
       <input type="submit" id="logout" name="logout" value="Logout">
-    <!-- {% else %} -->
+    {% else %}
       <input type="submit" id="login" name="login" value="Login">
-    <!-- {% endif %} -->
+    {% endif %}
     <input type="submit" id="home" name="home" value="Home">
   </form>
 
@@ -23,7 +23,7 @@
   <h1>Edit Hotel</h1>
   </div></div><br>
   
-    <!-- {% if hotel %} -->
+    {% if hotel %}
       <div id="edited_hotel">
         <p>
           <form method="post">

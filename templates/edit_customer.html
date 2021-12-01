@@ -7,11 +7,11 @@
 
 <body>
   <form method="post" for="backtrack">
-    <!-- {% if user %} -->
+    {% if user %}
       <input type="submit" id="logout" name="logout" value="Logout">
-    <!-- {% else %} -->
+    {% else %}
       <input type="submit" id="login" name="login" value="Login">
-    <!-- {% endif %} -->
+    {% endif %}
     <input type="submit" id="home" name="home" value="Home">
   </form>
 
@@ -19,13 +19,13 @@
   <div class="row">
   <h1>Edit User</h1>
   <div>
-    <!-- {% if user and customer %} -->
+    {% if user and customer %}
       <div id="edited_customer">
         <p>
           <form method="post">
-            <!-- {% if customer.admin_status %} -->
+            {% if customer.admin_status %}
               This user is an admin. <br>
-            <!-- {% endif %} -->
+            {% endif %}
             <li for="username">Username: </li>
             
             <input type="text" id="username" name="username" value="{{customer.username}}"><br><br>
@@ -54,9 +54,9 @@
           </form>
         </p>
       </div>
-    <!-- {% else %}
+    {% else %}
       No user was found at this index.
-    {% endif %} -->
+    {% endif %}
   </div> </div> </div>
 </body>
 </html>

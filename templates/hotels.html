@@ -7,7 +7,7 @@
 </head>
 
 <body>
-  <!-- {% with messages = get_flashed_messages() %}
+  {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
@@ -18,15 +18,15 @@
           </div>
       {% endfor %}
     {% endif %}
-  {% endwith %} -->
+  {% endwith %}
 
   <br>
   <form method="post" for="backtrack">
-    <!-- {% if user %} -->
+    {% if user %}
       <input type="submit" id="logout" name="logout" value="Logout">
-    <!-- {% else %} -->
+    {% else %}
       <input type="submit" id="login" name="login" value="Login">
-    <!-- {% endif %} -->
+    {% endif %}
     <input type="submit" id="home" name="home" value="Home">
   </form>
 
@@ -37,8 +37,8 @@
     </div>
   </div><br>
 
-    <!-- {% if hotels|length >= 1 %}
-      {% for hotel in hotels %} -->
+    {% if hotels|length >= 1 %}
+      {% for hotel in hotels %}
       <div class="container">
         <div class="row">
         <div id={{ hotel.name }}>
@@ -54,20 +54,20 @@
             <form method="post">
               <br>
               <input type="submit" id="{{ hotel.index }}-reserve" name="{{ hotel.index }}-reserve" value="Reserve?">
-              <!-- {% if user and user.admin_status %} -->
+              {% if user and user.admin_status %}
                 <input type="submit" id="{{ hotel.index }}-edit" name="{{ hotel.index }}-edit" value="Edit Hotel">
-              <!-- {% endif %} -->
+              {% endif %}
             </form>
           </p>
           </div>
           </div>
         </div>
-      <!-- {% endfor %}
+      {% endfor %}
     {% else %}
       No hotels were found with your search criteria.
       An additional search was attempted with a wider price range,
       which also returned no results. You may need to adjust your inputs!
-    {% endif %} -->
+    {% endif %}
   
 </body>
 </html>

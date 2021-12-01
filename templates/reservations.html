@@ -9,11 +9,11 @@
 <body>
   <br>
   <form method="post" for="backtrack">
-    <!-- {% if user %} -->
+    {% if user %}
       <input type="submit" id="logout" name="logout" value="Logout">
-    <!-- {% else %} -->
+    {% else %}
       <input type="submit" id="login" name="login" value="Login">
-    <!-- {% endif %} -->
+    {% endif %}
     <input type="submit" id="home" name="home" value="Home">
   </form><br><br>
 
@@ -21,8 +21,8 @@
     <div class="row">
   <h1>Reservations{% if user.admin_status %} (Admin view) {% endif %}</h1>
   <div>
-    <!-- {% if reservations|length >= 1 %}
-      {% for reservation in reservations %} -->
+    {% if reservations|length >= 1 %}
+      {% for reservation in reservations %}
         <div>
           <p>
             <li><b>{% if reservation.is_past %}Past{% else %}Future{% endif %}</b> Reservation (id: {{ reservation.index }}) for {{ reservation.hotel_info.name }}</li>
@@ -38,10 +38,10 @@
 
           </p>
         </div>
-      <!-- {% endfor %}
+      {% endfor %}
     {% else %}
       You have no reservations - book today!
-    {%endif%} -->
+    {%endif%}
   </div>
   </div>
   </div>
