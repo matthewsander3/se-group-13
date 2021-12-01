@@ -26,13 +26,13 @@
     </div>
   </div>
   <br>
-  
+
     {% if hotel %}
       <div id="edited_hotel">
 
         <p>
           <form method="post">
-            
+
             <div class="container">
               <div class="row">
 
@@ -51,19 +51,15 @@
                   <input type="number" id="new_weekend_diff" name="new_weekend_diff" value="{{hotel.weekend_differential}}""><br><br>
                 </div>
 
-                <div class="col=auto">
+                <div class="col-auto">
                   <li>Room Prices (-1 / empty for unavaiable room): </li><br>
-                  <li>Standard room: $</li>
+                  Standard room: $
                   <input type="number" id="standard_cost" name="standard_cost" value="{{hotel.rooms_dict.Standard}}"><br><br>
-                </div>
 
-                <div class="col-auto">
-                  <li>Queen rooms: $</li>
+                  Queen rooms: $
                   <input type="number" id="queen_cost" name="queen_cost" value="{{hotel.rooms_dict.Queen}}"><br><br>
-                </div>
 
-                <div class="col-auto">
-                  <li>&King rooms: $</li>
+                  King rooms: $
                   <input type="number" id="king_cost" name="king_cost" value="{{hotel.rooms_dict.King}}"><br><br>
                 </div>
 
@@ -81,22 +77,22 @@
                     <input type="checkbox" id="pool_status" name="pool_status" value="Pool" {% if "Pool" in hotel.amenity_list %} checked {% endif %}>
                     <label for="pool_status">Pool</label>
                   </div>
-                  
+
                   <div>
                   <input type="checkbox" id="gym_status" name="gym_status" value="Gym" {% if "Gym" in hotel.amenity_list %} checked {% endif %}>
                     <label for="gym_status">Gym</label>
                   </div>
-                  
+
                   <div>
                     <input type="checkbox" id="spa_status" name="spa_status" value="Spa"  {% if "Spa" in hotel.amenity_list %} checked {% endif %}>
                     <label for="spa_status">Spa</label>
                   </div>
-              
+
                   <div>
                     <input type="checkbox" id="office_status" name="office_status" value="Office" {% if "Business Office" in hotel.amenity_list %} checked {% endif %}>
                     <label for="office_status">Office</label>
                   </div>
-                  
+
                </fieldset>
                <br>
                <br>
@@ -116,7 +112,7 @@
 
     {% else %}
       No hotel was found at this index.
-    
+
     {% endif %}
 
 </body>
