@@ -16,7 +16,7 @@
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
           </button>
-          </div>
+        </div>
       {% endfor %}
     {% endif %}
   {% endwith %}
@@ -28,47 +28,57 @@
     {% else %}
       <input type="submit" id="login" name="login" value="Login">
     {% endif %}
-    <input type="submit" id="home" name="home" value="Home">
-  </form><br><br>
+      <input type="submit" id="home" name="home" value="Home">
+  </form>
+  <br>
+  <br>
 
 
-    <div class="container">
-        <div class="row">
-            <h1>Book your Reservation!</h1>
-        </div>
-    </div><br>
+  <div class="container">
+    <div class="row">
+      <h1>Book your Reservation!</h1>
+    </div>
+  </div>
+  <br>
 
   <form method="post">
+
     <div class="container">
-    <div class="row">
-      <div class="col-auto">
-    <label for="sdate">Check-In Date:</label><br>
-    <input type="date" id="sdate" name="sdate"><br><br>
-    </div>
+      <div class="row">
 
-    <div class="col-auto">
-    <label for="edate">Check-Out Date:</label><br>
-    <input type="date" id="edate" name="edate"><br><br>
-    </div>
+        <div class="col-auto">
+          <label for="sdate">Check-In Date:</label><br>
+          <input type="date" id="sdate" name="sdate"><br><br>
+        </div>
 
-    <div class="col-auto">
-    <label for="numRooms">Number of Desired Rooms:</label><br>
-    <input type="number" id="numRooms" name="numRooms"><br><br>
-    </div>
+        <div class="col-auto">
+          <label for="edate">Check-Out Date:</label><br>
+          <input type="date" id="edate" name="edate"><br><br>
+        </div>
 
-    <div class="col-auto">
-    <label for="">Room Type:</label><br>
-    <select id="roomType" name="roomType">
-        {% if hotel.rooms_dict.Standard %} <option value="Standard">Standard</option> {% endif %}
-        {% if hotel.rooms_dict.Queen %} <option value="Queen">Queen</option> {% endif %}
-        {% if hotel.rooms_dict.King %} <option value="King">King</option> {% endif %}
-    </select>
-    </div></div></div>
+        <div class="col-auto">
+          <label for="numRooms">Number of Desired Rooms:</label><br>
+          <input type="number" id="numRooms" name="numRooms"><br><br>
+        </div>
+
+        <div class="col-auto">
+          <label for="">Room Type:</label><br>
+        <select id="roomType" name="roomType">
+          {% if hotel.rooms_dict.Standard %} <option value="Standard">Standard</option> {% endif %}
+          {% if hotel.rooms_dict.Queen %} <option value="Queen">Queen</option> {% endif %}
+          {% if hotel.rooms_dict.King %} <option value="King">King</option> {% endif %}
+        </select>
+        </div>
+        
+      </div>
+    </div>
 
     <br>
     <div class="text-center">
-    <input type="submit" value="Submit" for="proceed">
+      <input type="submit" value="Submit" for="proceed">
     </div>
+
   </form>
+
 </body>
 </html>

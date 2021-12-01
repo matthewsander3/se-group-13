@@ -16,7 +16,7 @@
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
           </button>
-          </div>
+        </div>
       {% endfor %}
     {% endif %}
   {% endwith %}
@@ -29,40 +29,49 @@
       <input type="submit" id="login" name="login" value="Login">
     {% endif %}
     <input type="submit" id="home" name="home" value="Home">
-  </form><br><br>
+  </form>
+  <br>
+  <br>
 
-    <div class="container">
-      <div class="row text-center">
-        <h1>All Customers (Admin Only)</h1>
-      </div>
-    </div><br>
+  <div class="container">
+    <div class="row text-center">
+      <h1>All Customers (Admin Only)</h1>
+    </div>
+  </div>
+  <br>
 
-    {% if customers|length >= 1 %}
-      {% for customer in customers %}
+  {% if customers|length >= 1 %}
+    {% for customer in customers %}
       <div class="container">
         <div class="row">
-        <div id={{ customer.name }}>
-          <p>
-            <li>User: {{ customer.username }} (id = {{ customer.index }})</li>
-            <li>Password: {{ customer.password }}</li>
-            <li>First Name: {{ customer.first_name }}</li>
-            <li>Last Name: {{ customer.last_name }}</li>
-            <li>Email: {{ customer.email_address }}</li>
-            <li>Phone Number: {{ customer.phone_num }}</li>
-            <li>Is {% if not customer.admin_status %}not{% endif %}an admin.</li>
 
-            <br>
-            <form method="post">
-              <input type="submit" id="{{ customer.index }}-delete" name="{{ customer.index }}-delete" value="Delete Customer?">
-            </form>
+          <div id={{ customer.name }}>
+            <p>
+              <li>User: {{ customer.username }} (id = {{ customer.index }})</li>
+              <li>Password: {{ customer.password }}</li>
+              <li>First Name: {{ customer.first_name }}</li>
+              <li>Last Name: {{ customer.last_name }}</li>
+              <li>Email: {{ customer.email_address }}</li>
+              <li>Phone Number: {{ customer.phone_num }}</li>
+              <li>Is {% if not customer.admin_status %}not{% endif %}an admin.</li>
 
-          </p>
-        </div></div></div>
-      {% endfor %}
+              <br>
+              <form method="post">
+                <input type="submit" id="{{ customer.index }}-delete" name="{{ customer.index }}-delete" value="Delete Customer?">
+              </form>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    {% endfor %}
+
     {% else %}
       No hotels were found with your search criteria.
       An additional search was attempted with a wider price range,
       which also returned no results. You may need to adjust your inputs!
+    
     {% endif %}
+
 </body>
 </html>

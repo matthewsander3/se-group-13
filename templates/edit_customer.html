@@ -15,48 +15,39 @@
     <input type="submit" id="home" name="home" value="Home">
   </form>
 
-<div class="container">
-  <div class="row">
-  <h1>Edit User</h1>
-  <div>
-    {% if user and customer %}
-      <div id="edited_customer">
-        <p>
-          <form method="post">
-            {% if customer.admin_status %}
-              This user is an admin. <br>
-            {% endif %}
-            <li for="username">Username: </li>
-            
-            <input type="text" id="username" name="username" value="{{customer.username}}"><br><br>
+  <div class="container">
+    <div class="row">
+      <h1>Edit User</h1>
 
-            <li for="password">Password: </li>
-            
-            <input type="text" id="password" name="password" value="{{customer.password}}""><br><br>
+      {% if user and customer %}
+        <div id="edited_customer">
+          <p>
+            <form method="post">
+              {% if customer.admin_status %}
+                This user is an admin. <br>
+              {% endif %}
+              <li for="username">Username: </li>
+              <input type="text" id="username" name="username" value="{{customer.username}}"><br><br>
+              <li for="password">Password: </li>
+              <input type="text" id="password" name="password" value="{{customer.password}}"><br><br>
+              <li for="fname">First Name: </li>
+              <input type="text" id="fname" name="fname" value="{{customer.first_name}}"><br><br>
+              <li for="lname">Last Name: </li>
+              <input type="text" id="lname" name="lname" value="{{customer.last_name}}"><br><br>
+              <li for="email">Email Name: </li> 
+              <input type="email" id="email" name="email" value="{{customer.email_address}}"><br><br>
+              <li for="phone_num">Phone Number: </li>
+              <input type="tel" id="phone_num" name="phone_num" value="{{customer.phone_num}}"><br><br>
+              <input type="submit" value="Submit" for="proceed">
+            </form>
+          </p>
+        </div>
+      {% else %}
+        No user was found at this index.
 
-            <li for="fname">First Name: </li>
-            
-            <input type="text" id="fname" name="fname" value="{{customer.first_name}}"><br><br>
+      {% endif %}
+    </div>
+  </div>
 
-            <li for="lname">Last Name: </li>
-            
-            <input type="text" id="lname" name="lname" value="{{customer.last_name}}""><br><br>
-
-            <li for="email">Email Name: </li>
-            
-            <input type="email" id="email" name="email" value="{{customer.email_address}}""><br><br>
-
-            <li for="phone_num">Phone Number: </li>
-            
-            <input type="tel" id="phone_num" name="phone_num" value="{{customer.phone_num}}""><br><br>
-
-            <input type="submit" value="Submit" for="proceed">
-          </form>
-        </p>
-      </div>
-    {% else %}
-      No user was found at this index.
-    {% endif %}
-  </div> </div> </div>
 </body>
 </html>
