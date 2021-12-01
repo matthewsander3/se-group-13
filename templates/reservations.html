@@ -18,11 +18,16 @@
   </form><br><br>
 
   <div class="container">
-    <div class="row">
+    <div class="row text-center">
   <h1>Reservations{% if user.admin_status %} (Admin view) {% endif %}</h1>
-  <div>
+  </div></div><br>
+
+
+  
     {% if reservations|length >= 1 %}
       {% for reservation in reservations %}
+      <div class="container">
+        <div class="row">
         <div>
           <p>
             <li><b>{% if reservation.is_past %}Past{% else %}Future{% endif %}</b> Reservation (id: {{ reservation.index }}) for {{ reservation.hotel_info.name }}</li>
@@ -38,12 +43,15 @@
 
           </p>
         </div>
+      </div>
+      </div>
       {% endfor %}
     {% else %}
-      You have no reservations - book today!
+    <div class="text-warning text-center font-weight-bolder">
+    You have no reservations - book today!
+    </div>
     {%endif%}
-  </div>
-  </div>
-  </div>
+  
+
 </body>
 </html>
