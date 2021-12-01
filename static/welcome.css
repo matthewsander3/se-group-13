@@ -1,0 +1,76 @@
+body {
+    text-align: center;
+    display: inline-block;
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    margin-left: auto;
+    margin-right: auto;
+
+    color: black;
+    /* background-color: ;
+    background-image: ; */
+    font-family: Georgia;
+    
+    /* width: 450px;
+    height: 450px; */
+    /* max-width: 600px;
+    min-width: 250px;
+    max-height: 600px;
+    min-height: 250px; */
+
+    border: 2px solid silver;
+    border-radius: 5px;
+    padding: 150px 500px;
+}
+
+input {
+    /* text-align: center;
+    display: inline-block;
+    position: fixed;
+    top: 80%;
+    transform: translate(-50%, -50%); */
+
+    color: #e6e6e6;
+    background-color: #466995;
+
+    font-size: 20px;
+    font-weight: 100px bold;
+
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    display: inline-block;
+    position: fixed;
+    top: 10%;
+    transform: translate(-50%, -50%);
+}
+
+#login {
+    text-align: center;
+    display: inline-block;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    padding: 10px 120px;
+}
+
+#makeaccount {
+    text-align: center;
+    display: inline-block;
+    position: fixed;
+    top: 70%;
+    transform: translate(-50%, -50%);
+    padding: 10px 80px;
+}
+
+input:hover {
+    background-color: #465a95;
+    border-color: #465a95;
+}

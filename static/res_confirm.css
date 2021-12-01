@@ -1,0 +1,43 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.container, .container-fluid {
+    /* background-color: ; */
+    border: #e6e6e6 solid 5px;
+    color: white;
+    border-radius: 5px;
+}
+
+.row {
+    background-color: #466995;
+    border: #466995 solid 10px;
+}
+
+.col {
+    border: #466995;
+    background-color: #466995;
+    color: white;
+}
+
+input {
+    border-radius: 7px;
+    color: #333333;
+    border: 1px solid #e6e6e6;
+    padding: 2px 2px;
+}
+
+[type="submit"] {
+    font-size: 15px;
+    font-weight: 100px bold;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    padding: 2px 17px;
+}
+
+[type="submit"]:hover {
+    background-color: #c6c6c6;
+    border-color: #c6c6c6;
+}
