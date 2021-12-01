@@ -48,10 +48,11 @@
   <input type="submit" id="viewhotels" name="viewhotels" value="View Hotels">
   <input type="submit" id="searchhotels" name="searchhotels" value="Search Hotels">
   <input type="submit" id="viewreservations" name="viewreservations" value="View Reservations">
-  <!-- {% if user.admin_status %} -->
+  <input type="submit" id="editaccount" name="editaccount" value="View / Edit Account">
+  {% if user.admin_status %}
     <input type="submit" id="customers" name="customers" value="Customers">
-  <!-- {% endif %} -->
-</form></div>
+  {% endif %}
+</form></div></div>
 
 </body>
 </html>
