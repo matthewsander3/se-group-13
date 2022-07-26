@@ -1,56 +1,39 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+span {
+    color: red;
 }
 
-.container, .container-fluid {
-    /* background-color: ; */
-    border: #e6e6e6 solid 5px;
-    color: white;
-    border-radius: 5px;
+.book-reservation {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    height: 590px;
 }
 
-.row {
-    background-color: #466995;
-    border: #466995 solid 10px;
+h1 {
+    margin: 2em;
 }
 
-.col {
-    border: #466995;
-    background-color: #466995;
-    color: white;
+label {
+   display: block;
+   font-size: small;
+   margin-left: 0.5em;
 }
 
-input {
-    border-radius: 7px;
-    color: #333333;
-    border: 1px solid #e6e6e6;
-    padding: 2px 2px;
+form div {
+    display: flex;
+    align-items: space-between;
+    flex-direction: column;
 }
 
-[for="backtrack"] {
-    position: absolute;
-    left: 7%;
+input, select {
+    margin: 0.5em;
+    padding: 0.2em 1em;
 }
 
-[for="proceed"] {
-    font-size: 20px !important;
-    font-weight: 100px bold;
-    border: 1px solid #e6e6e6;
-    border-radius: 5px;
-    padding: 3px 80px !important;
-}
-
-[type="submit"] {
-    font-size: 15px;
-    font-weight: 100px bold;
-    border: 1px solid #e6e6e6;
-    border-radius: 5px;
-    padding: 1px 10px;
-}
-
-[type="submit"]:hover {
-    background-color: #c6c6c6;
-    border-color: #c6c6c6;
+#submit {
+    padding: 0.5em 6em;
+    margin: 3em 0;
+    letter-spacing: 1px;
+    cursor: pointer;
 }

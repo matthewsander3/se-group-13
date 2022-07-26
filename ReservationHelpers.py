@@ -14,7 +14,7 @@ def make_reservation(
         price: int,
         in_date: date,
         out_date: date
-        ) -> Reservation:
+    ) -> Reservation:
 
     max_index = 0
     for reservation in reservation_cache:
@@ -22,14 +22,14 @@ def make_reservation(
             max_index = reservation.get_index() + 1
 
     return Reservation.Reservation(
-        max_index,
-        user_index,
-        hotel_index,
-        num_rooms_reserved,
-        room_type_reserved,
-        price,
-        in_date,
-        out_date,
+            max_index,
+            user_index,
+            hotel_index,
+            num_rooms_reserved,
+            room_type_reserved,
+            price,
+            in_date,
+            out_date,
         )
 
 # When passed a dictionary of reservation info
@@ -42,17 +42,17 @@ def dict_to_reservation(reserve_dict: dict):
     hotel_index = reserve_dict["hotel_index"] #Integer
     num_rooms_reserved = reserve_dict["num_rooms_reserved"] #Integer
     room_type_reserved = reserve_dict["room_type_reserved"] #String
-    price = reserve_dict["price"] #int
+    price = reserve_dict["price"] #Integer
     in_date = date(
         reserve_dict["in_date"]["year"],
         reserve_dict["in_date"]["month"],
         reserve_dict["in_date"]["day"]
-        )
+    )
     out_date = date(
         reserve_dict["out_date"]["year"],
         reserve_dict["out_date"]["month"],
         reserve_dict["out_date"]["day"]
-        )
+    )
 
     return Reservation.Reservation(
         index,
@@ -63,7 +63,7 @@ def dict_to_reservation(reserve_dict: dict):
         price,
         in_date,
         out_date
-        )
+    )
 
 # When passed a Reservation, converts it to a dictionary.
 # > Returns a dict.

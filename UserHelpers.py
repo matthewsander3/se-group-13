@@ -14,7 +14,7 @@ def make_user(
         email_address: str,
         phone_num: str,
         admin_status: bool
-        ) -> User:
+    ) -> User:
 
     max_index = 0
     for user in user_cache:
@@ -22,21 +22,20 @@ def make_user(
             max_index = user.get_index() + 1
 
     return User.User(
-        max_index,
-        username,
-        password,
-        first_name,
-        last_name,
-        email_address,
-        phone_num,
-        admin_status
+            max_index,
+            username,
+            password,
+            first_name,
+            last_name,
+            email_address,
+            phone_num,
+            admin_status
         )
 
 # Take a dictionariy representing a user
 # and translates it to a user object.
 # > Returns a user object.
 def dict_to_user(user_dict: dict) -> User:
-
     index = user_dict["index"]
     username = user_dict["username"]
     password = user_dict["password"]
@@ -47,14 +46,14 @@ def dict_to_user(user_dict: dict) -> User:
     admin_status = user_dict["admin_status"]
 
     return User.User(
-        index,
-        username,
-        password,
-        first_name,
-        last_name,
-        email_address,
-        phone_num,
-        admin_status
+            index,
+            username,
+            password,
+            first_name,
+            last_name,
+            email_address,
+            phone_num,
+            admin_status
         )
 
 # Takes a user object and converts it to a dictionary.

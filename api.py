@@ -163,27 +163,27 @@ class HotelSearch(Resource):
         # Our first shot at searching
         ret_text = "Found Hotels:"
         output = hp.find_certain_hotels(
-            room_type,
-            num_rooms,
-            req_amenities,
-            in_date,
-            out_date,
-            price_range_min,
-            price_range_max
-            )
-
-        # Did our first shot return no results?
-        # Search agin with a wider price range
-        if len(output) < 1:
-            ret_text = "No hotels found - Found hotels in wider price range:"
-            output = hp.find_certain_hotels(
                 room_type,
                 num_rooms,
                 req_amenities,
                 in_date,
                 out_date,
-                price_range_min - NO_ROOMS_MIN_PRICE_DECREASE,
-                price_range_max + NO_ROOMS_MAX_PRICE_INCREASE
+                price_range_min,
+                price_range_max
+            )
+
+        # Did our first shot return no results?
+        # Search agin with a wider price range
+        if len(output) < 1:
+            ret_text = "No hotels found! Check hotels in wider price range:"
+            output = hp.find_certain_hotels(
+                    room_type,
+                    num_rooms,
+                    req_amenities,
+                    in_date,
+                    out_date,
+                    price_range_min - NO_ROOMS_MIN_PRICE_DECREASE,
+                    price_range_max + NO_ROOMS_MAX_PRICE_INCREASE
                 )
 
         # Did our wider prince range return no results?
@@ -333,7 +333,6 @@ class Customers(Resource):
 
 class EditCustomer(Resource):
     def post(self, user_id):
-
         if not is_logged_in():
             return please_login_alert()
 
@@ -599,7 +598,7 @@ class Login(Resource):
             return redirect("/login")
 
         if not up.login(username, password):
-            flash("Login failed! Uername or password incorrect.")
+            flash("Login failed! Username or password incorrect.")
             return redirect("/login")
 
         return redirect("/home")
@@ -705,9 +704,9 @@ def please_login_alert():
 def admin_only_alert():
     return abort(401, message = "This page is for admins only!")
 
-# Make account. (/makeaccount)
+# Make account. (/register)
 # Allows a user to make a new account.
-class MakeAccount(Resource):
+class Register(Resource):
     def post(self):
         if is_logged_in():
             flash("You are already logged in.") # Obviously don't include this in the end
@@ -731,30 +730,30 @@ class MakeAccount(Resource):
         try:
             if len(f_name) < 2:
                 flash("No first name inputted!")
-                return redirect("/makeaccount")
+                return redirect("/register")
             if len(l_name) < 2:
                 flash("No last name inputted!")
-                return redirect("/makeaccount")
+                return redirect("/register")
             if len(email) < 2:
                 flash("No email inputted!")
-                return redirect("/makeaccount")
+                return redirect("/register")
             if len(phone_num) < 2:
                 flash("No phone number inputted!")
-                return redirect("/makeaccount")
+                return redirect("/register")
             if len(username) < 2:
                 flash("No username inputted!")
-                return redirect("/makeaccount")
+                return redirect("/register")
             if len(password) < 2:
                 flash("No password inputted!")
-                return redirect("/makeaccount")
+                return redirect("/register")
         except (ValueError, TypeError):
             flash("An error occured. Please try again.")
-            return redirect("/makeaccount")
+            return redirect("/register")
 
         for user in up.user_cache:
             if user.get_username() == username:
                 flash("Username already exists!")
-                return redirect("/makeaccount")
+                return redirect("/register")
 
         new_user = up.make_user(
             username,
@@ -783,13 +782,13 @@ class MakeAccount(Resource):
 class Welcome(Resource):
     def post(self):
         parser.add_argument('login', type=bool)
-        parser.add_argument('makeaccount', type=bool)
+        parser.add_argument('register', type=bool)
         args = parser.parse_args()
 
         if args['login']:
             return redirect("/login")
-        if args['makeaccount']:
-            return redirect("/makeaccount")
+        if args['register']:
+            return redirect("/register")
 
         return abort(404)
 
@@ -836,11 +835,10 @@ class Home(Resource):
         return make_response(render_template('home.html', user=curr_user), 200)
 
 # API Resource Routing here
-#
 api.add_resource(Welcome,'/')
 api.add_resource(Home,'/home')
 api.add_resource(Login,'/login')
-api.add_resource(MakeAccount,'/makeaccount')
+api.add_resource(Register,'/register')
 api.add_resource(HotelList,'/hotels')
 api.add_resource(Hotel, '/hotels/<int:hotel_id>')
 api.add_resource(HotelSearch, '/hotels/search')

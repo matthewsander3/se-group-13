@@ -1,17 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Home page</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='welcome.css')}}">
-  </head>
+{% extends "base.html" %} 
 
-<body>
+{% block title %}Home Page{% endblock %}
 
-<h1>Login or make an account.</h1>
+{% block link %}/static/welcome.css{% endblock %}
+
+{% block nav%}
 <form method="post">
   <input type="submit" id="login" name="login" value="Login">
-  <input type="submit" id="makeaccount" name="makeaccount" value="Make account">
+  <input type="submit" id="register" name="register" value="Register">
 </form>
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+  <section class="welcome">
+    <h1>Welcome to General Eric's Hotels</h1>
+    <h3>Login or Create an Account.</h3>
+    <form method="post">
+      <input type="submit" id="login" name="login" value="Login">
+      <input type="submit" id="register" name="register" value="Register">
+    </form>
+  </section>
+{% endblock %}

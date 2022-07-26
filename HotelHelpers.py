@@ -9,7 +9,6 @@ hotel_cache = []
 # Translates it into a Hotel object.
 # > Returns a hotel object.
 def dict_to_hotel(hotel_dict: dict) -> Hotel:
-
     index = hotel_dict["index"] #Integer
     name = hotel_dict["name"] #String
     num_rooms = hotel_dict["rooms"] #Integer
@@ -18,12 +17,12 @@ def dict_to_hotel(hotel_dict: dict) -> Hotel:
     amenities_list = hotel_dict["amenity_list"] #List
 
     return Hotel.Hotel(
-        index,
-        name,
-        diff,
-        num_rooms,
-        rooms_dict,
-        amenities_list
+            index,
+            name,
+            diff,
+            num_rooms,
+            rooms_dict,
+            amenities_list
         )
 
 # When passed a hotel object
@@ -56,7 +55,7 @@ def find_certain_hotels(
         out_date: date,
         price_range_min: int,
         price_range_max: int
-        ) -> list:
+    ) -> list:
 
     output = []
     for hotel in hotel_cache:
@@ -75,7 +74,7 @@ def find_certain_hotels(
             if in_date < reservation.get_in_date() and out_date > reservation.get_out_date():
                 continue
 
-            final_room_num = final_room_num - reservation.get_num_rooms_reserved()
+        final_room_num = final_room_num - reservation.get_num_rooms_reserved()
         if final_room_num >= num_rooms:
             has_enough_rooms = True
 
@@ -87,9 +86,9 @@ def find_certain_hotels(
         # Check that it has all the amenities we want
         has_amenities = True
         for amenity in req_amenities:
-            if not req_amenities[amenity]: #We don't want this amenity
+            if not req_amenities[amenity]: # We don't want this amenity
                 continue
-            if amenity not in hotel.get_amenities_lists(): #We don't have an amenity we want
+            if amenity not in hotel.get_amenities_lists(): # We don't have an amenity we want
                 has_amenities = False
 
         # If the number of available rooms less than the specified number of rooms, don't show the hotel

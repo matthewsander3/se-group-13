@@ -1,43 +1,62 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+.hotel-search {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    height: 590px;
 }
 
-.container, .container-fluid {
-    /* background-color: ; */
-    border: #e6e6e6 solid 5px;
-    color: white;
-    border-radius: 5px;
+.hotel-search h1 {
+    margin: 2em 0;
 }
 
-.row {
-    background-color: #466995;
-    border: #466995 solid 10px;
+form .group {
+    display: flex;
+    justify-content: space-between;
 }
 
-.col {
-    border: #466995;
-    background-color: #466995;
-    color: white;
+form .group div {
+    display: flex;
+    flex-direction: column;
 }
 
-input {
-    border-radius: 7px;
-    color: #333333;
-    border: 1px solid #e6e6e6;
-    padding: 2px 2px;
+.start, .end {
+    width: 200%;
 }
 
-[type="submit"] {
-    font-size: 18px;
-    font-weight: 100px bold;
-    border: 1px solid #e6e6e6;
-    border-radius: 5px;
-    padding: 3px 50px;
+label {
+    display: block;
+    font-size: small;
+    margin-left: 0.5em;
 }
 
-[type="submit"]:hover {
-    background-color: #c6c6c6;
-    border-color: #c6c6c6;
+fieldset {
+    max-width: 70%;
+    margin-left: 0.5em;
+}
+
+fieldset label {
+    display: inline;
+    margin-left: auto;
+}
+
+input, select {
+    margin: 0.5em;
+    padding: 0.2em 1em;
+}
+
+.submission {
+    display: flex;
+    justify-content: center;
+}
+
+#submit {
+    margin: 2em 0;
+    padding: 0.5em 5em;
+    letter-spacing: 1px;
+}
+
+#submit:hover {
+    background-color: #e2dfdf;
+    cursor: pointer;
 }

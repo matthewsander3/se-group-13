@@ -1,33 +1,40 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css')}}">
-  </head>
+{% extends "base.html" %} 
 
-<body>
+{% block title %}Login{% endblock %}
+
+{% block link %}/static/login.css{% endblock %}
+
+{% block nav %}
+  <form method="post">
+    <input type="submit" id="home" name="home" value="Home">
+    {% if user %}
+    <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}
+    <input type="submit" id="login" name="login" value="Login">
+    {% endif %}
+  </form>
+{% endblock %}
+
+{% block content %}
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-          <span>{{ message }}</span>
-          </button>
-        </div>
+        <span>{{ message }}</span>
       {% endfor %}
     {% endif %}
   {% endwith %}
 
-  <h1>Log in here.</h1>
-  <form method="post">
-    <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username"><br><br>
+  <form method="post" class="form">
+    <h2>LOGIN</h2>
 
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password"><br><br>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username">
 
-    <input type="submit" value="Submit">
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password">
+
+    <input type="submit" id="submit" value="Login">
   </form>
-
-</body>
-</html>
+  
+{% endblock %}

@@ -1,43 +1,34 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+.reservation-confirmation {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    height: 590px;
 }
 
-.container, .container-fluid {
-    /* background-color: ; */
-    border: #e6e6e6 solid 5px;
-    color: white;
-    border-radius: 5px;
+.reservation-confirmation h1 {
+    margin: 1em;
 }
 
-.row {
-    background-color: #466995;
-    border: #466995 solid 10px;
+.reservation-confirmation div {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 20%; 
 }
 
-.col {
-    border: #466995;
-    background-color: #466995;
-    color: white;
+.reservation-confirmation p {
+    display: inline;
+    font-size: medium;
+    margin-left: 5px;
 }
 
 input {
-    border-radius: 7px;
-    color: #333333;
-    border: 1px solid #e6e6e6;
-    padding: 2px 2px;
+    padding: 0.5em 4em;
+    margin: 2em 0.5em;
 }
 
-[type="submit"] {
-    font-size: 15px;
-    font-weight: 100px bold;
-    border: 1px solid #e6e6e6;
-    border-radius: 5px;
-    padding: 2px 17px;
-}
-
-[type="submit"]:hover {
-    background-color: #c6c6c6;
-    border-color: #c6c6c6;
+input:hover {
+    background-color: #e2dfdf;
+    cursor: pointer;
 }

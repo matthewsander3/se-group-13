@@ -1,5 +1,3 @@
-#This will be a User object, contains:
-    #Not really sure how to handle user yet, pushing this for future use
 class User:
     def __init__(self, index, username, password, first_name, last_name, email_address, phone_num, admin_status):
         self.index = index
