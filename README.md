@@ -1,11 +1,16 @@
-# se-group-13
+UTSA CS 3773 (Fall 2021) - Software Engineering Group 13
 
-This is the code repository for Group 13's 3773 final project.
+Project: Hotel Reservation System
 
-This code was written in Python with Flask / Flask RESTful and HTML / CSS. 
+Group members:
 
-### How to run:
+- Matthew Sander
+- Kyle Melbert
+- Benjamin Ndruzi
 
-- Download the source code.
-- Ensure all the dependencies are installed. (Python, Flask / Flask RESTful)
-- Run api.py and visit the localhosted website. 
+How to Run:
+
+
+About:
+
+This project was our final project and counted as our final exam for the semester. The professor asked about building a software from the ground up 
