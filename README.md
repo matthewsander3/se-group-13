@@ -5,8 +5,8 @@
 ## Group members:
 
 - Matthew Sander: Project Manager (Back-end)
-- Kyle Melbert: Lead developer (Backend)
-- Benjamin Ndruzi: UI Designer (Frontend/Backend)
+- Kyle Melbert: Lead developer (Back-end)
+- Benjamin Ndruzi: UI Designer (Front-end/Back-end)
 
 ## About:
 
