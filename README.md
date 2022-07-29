@@ -16,5 +16,36 @@ This project was our final project and counted as our final exam for the semeste
 
 **General Eric's Hotels** is a hotel reservation web application focused on simplicity and ease of use. Following are features you can find in the app:
 
-- User can register and/or login
-- User
+The customer must create an account before accessing all the features.
+
+The user/customer can:
+- create an account and/or login
+- search hotels by entering the following: Checkin and checkout dates, weekend differential, min and max prices, room type, and number of rooms
+- book and/or cancel reservations 
+- edit their account information
+
+The following are Admin specific features:
+
+The admin can:
+- Edit hotels
+- View customers
+- Delete customers 
+- Delete reservations
+
+## Tech-stack:
+
+- Front-end: HTML, CSS
+- Back-end: Python, Flask (Flask RESTful, Jinja)
+- API was developed and tested using Postman
+
+Note: Given the shor amount of time we had to finish the project, we went for Flask as our backend because it is lightweight, allow for fast development, and is easy to understand.
+
+## How to run:
+
+- Download source code
+- Make sure you have Python installed in your computer
+- Open code editor and open project folder
+- Install all dependencies: 
+    * `pip freeze > requirements.txt`
+    * `pip install -r requirements.txt`
+- Run the code and visit localhosted site
