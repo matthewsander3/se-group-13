@@ -10,7 +10,7 @@
 
 ## About
 
-This project was our final project and counted as our final exam for the semester. The professor asked each group to build an application from the ground up by using any technology we wanted. We were placed into different groups of three to five people. The goal of this project was to give us an idea of software engineering best practices. We learned about the interaction between the development team and the client, designing the project based on client needs by using personas, scenarios, and user stories. We also learned about popular software methodologies such as agile and scrum. After having distributed responsibilities among members, we organized ourselves by doing small scrums meetings to discuss features and functionalities and made sure we stayed updated with the client (The professor).
+This project was our final project and counted as our final exam for the semester. The professor asked each group to build an application from the ground up by using any technology we wanted. We were placed into different groups of three to five people. The goal of this project was to give us an idea of software engineering best practices. We learned about the interaction between the development team and the client, designing the project based on client needs by using personas, scenarios, and user stories. We also learned about popular software methodologies such as agile and scrum. After having distributed responsibilities among members, we organized ourselves by doing small scrums meetings to discuss features and functionalities and made sure we stayed updated with the client (The professor). This project was built in three weeks.
 
 ## Features
 
@@ -19,8 +19,8 @@ This project was our final project and counted as our final exam for the semeste
 The customer must create an account before accessing all the features.
 
 The user/customer can:
-- Create an account and/or login
-- Search hotels by entering the following: Checkin and checkout dates, weekend differential, min and max room prices, room type, and number of rooms
+- Create an account and/or login/logout
+- Search hotels by entering the following: check-in and check-out dates, weekend differential, min and max room prices, room type, and number of rooms
 - View past and future reservations
 - Book and/or cancel reservations
 - Edit their account information
@@ -59,3 +59,8 @@ Note: Given the short time we had to finish the project, we went for Flask as ou
 ## Project flow
 
 ![Project Flow](/other/project_flow.png)
+
+## Features we hope we implemented
+
+- We hope we used Flask SQLAlchemy to store information in a database for easy data manipulation
+- We hope we used hashing for storing users' password as a more secure way of authentication/autorization 
