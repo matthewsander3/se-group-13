@@ -39,7 +39,10 @@ The admin can:
 - **Back-end**: Python, Flask (Flask RESTful, Jinja), Postman (API development and testing)
 - **Database**: We used JSON files as a temporary substitute for a database since none of us had taken any database course at that time.
 
-Note: Given the short time we had to finish the project, we went for Flask as our back-end because it is lightweight, allows for fast development, and is easy to understand.
+Note: 
+- Given the short time we had to finish the project, we went for Flask as our back-end because it is lightweight, allows for fast development, and is easy to understand.
+- We hope we used Flask SQLAlchemy to store information in a database for easy data manipulation
+- We hope we used hashing for storing users' password as a more secure way of authentication/autorization 
 
 ## How to run
 
@@ -59,8 +62,3 @@ Note: Given the short time we had to finish the project, we went for Flask as ou
 ## Project flow
 
 ![Project Flow](/other/project_flow.png)
-
-## Features we hope we implemented
-
-- We hope we used Flask SQLAlchemy to store information in a database for easy data manipulation
-- We hope we used hashing for storing users' password as a more secure way of authentication/autorization 
