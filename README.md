@@ -35,10 +35,10 @@ The admin can:
 ## Tech-stack:
 
 - **Front-end**: HTML, CSS
-- **Back-end**: Python, Flask (Flask RESTful, Jinja)
-- API was developed and tested using Postman
+- **Back-end**: Python, Flask (Flask RESTful, Jinja), Postman (API development and testing)
+- **Database**: We used JSON files as a temporary substitute for a database since none of us had taken any database course at that time.
 
-Note: Given the short amount of time we had to finish the project, we went for Flask as our backend because it is lightweight, allow for fast development, and is easy to understand.
+Note: Given the short amount of time we had to finish the project, we went for Flask as our back-end because it is lightweight, allow for fast development, and is easy to understand.
 
 ## How to run:
 
@@ -49,3 +49,8 @@ Note: Given the short amount of time we had to finish the project, we went for F
     * `pip freeze > requirements.txt`
     * `pip install -r requirements.txt`
 - Run the code and visit localhosted site
+
+
+## Database Schema
+
+## Project 
