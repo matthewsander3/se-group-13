@@ -20,7 +20,7 @@ The customer must create an account before accessing all the features.
 
 The user/customer can:
 - create an account and/or login
-- search hotels by entering the following: Checkin and checkout dates, weekend differential, min and max prices, room type, and number of rooms
+- search hotels by entering the following: Checkin and checkout dates, weekend differential, min and max room prices, room type, and number of rooms
 - book and/or cancel reservations 
 - edit their account information
 
@@ -38,7 +38,7 @@ The admin can:
 - Back-end: Python, Flask (Flask RESTful, Jinja)
 - API was developed and tested using Postman
 
-Note: Given the shor amount of time we had to finish the project, we went for Flask as our backend because it is lightweight, allow for fast development, and is easy to understand.
+Note: Given the short amount of time we had to finish the project, we went for Flask as our backend because it is lightweight, allow for fast development, and is easy to understand.
 
 ## How to run:
 
