@@ -53,4 +53,8 @@ Note: Given the short amount of time we had to finish the project, we went for F
 
 ## Database Schema
 
-## Project 
+![Database Schema](/other/db_schema.png)
+
+## Project flow
+
+![Project Flow](/other/project_flow.png)
