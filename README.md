@@ -41,11 +41,11 @@ The admin can:
 
 Note: 
 - Given the short time we had to finish the project, we went for Flask as our back-end because it is lightweight, allows for fast development, and is easy to understand.
-- We wish we used Flask SQLAlchemy to store information in a database for easy data manipulation*
-- We wish we used hashing for storing users' password as a more secure way of authentication*
-- We wish we were familiar with writing python test*
+- We wish we used Flask SQLAlchemy to store information in a database for easy data manipulation *
+- We wish we used hashing for storing users' password as a more secure way of authentication *
+- We wish we were familiar with writing python test *
 
-*can be implemented in the future
+*_can be implemented in the future_
 
 ## How to run
 
