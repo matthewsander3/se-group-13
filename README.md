@@ -39,11 +39,13 @@ The admin can:
 - **Back-end**: Python, Flask (Flask RESTful, Jinja), Postman (API development and testing)
 - **Database**: We used JSON files as a temporary substitute for a database since none of us had taken any database course at that time.
 
-Note (can be implemented in the future): 
+Note: 
 - Given the short time we had to finish the project, we went for Flask as our back-end because it is lightweight, allows for fast development, and is easy to understand.
-- We wish we used Flask SQLAlchemy to store information in a database for easy data manipulation
-- We wish we used hashing for storing users' password as a more secure way of authentication
-- We wish we were familiar with writing python test
+- We wish we used Flask SQLAlchemy to store information in a database for easy data manipulation*
+- We wish we used hashing for storing users' password as a more secure way of authentication*
+- We wish we were familiar with writing python test*
+
+*can be implemented in the future
 
 ## How to run
 
