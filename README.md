@@ -55,7 +55,7 @@ Note:
 - Install all dependencies: 
     * `pip freeze > requirements.txt`
     * `pip install -r requirements.txt`
-- Run the code and visit localhosted site
+- Run `api.py` and visit localhosted site
 
 
 ## Database Schema
