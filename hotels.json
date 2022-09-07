@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [
   {
     "index": 0,
@@ -149,4 +150,157 @@
       "Pool"
     ]
   }
+=======
+[
+  {
+    "index": 0,
+    "name": "The Magnolia All Suites",
+    "rooms": 20,
+    "weekend_differential": 25,
+    "rooms_dict": {
+      "Standard": 100,
+      "Queen": 150,
+      "King": 250
+    },
+    "amenity_list": [
+      "Gym",
+      "Spa",
+      "Pool",
+      "Business Office"
+    ]
+  },
+  {
+    "index": 1,
+    "name": "The Lofts at Town Centre",
+    "rooms": 60,
+    "weekend_differential": 35,
+    "rooms_dict": {
+      "Standard": 105,
+      "Queen": 120,
+      "King": 190
+    },
+    "amenity_list": [
+      "Pool",
+      "Gym",
+      "Spa",
+      "Business Office"
+    ]
+  },
+  {
+    "index": 2,
+    "name": "Park North Hotel",
+    "rooms": 100,
+    "weekend_differential": 15,
+    "rooms_dict": {
+      "Standard": 50,
+      "Queen": 75,
+      "King": 90
+    },
+    "amenity_list": [
+      "Pool",
+      "Gym"
+    ]
+  },
+  {
+    "index": 3,
+    "name": "The Courtyard Suites",
+    "rooms": 20,
+    "weekend_differential": 25,
+    "rooms_dict": {
+      "Standard": 100,
+      "Queen": 150,
+      "King": 250
+    },
+    "amenity_list": [
+      "Pool",
+      "Gym",
+      "Spa",
+      "Business Office"
+    ]
+  },
+  {
+    "index": 4,
+    "name": "The Regency Rooms",
+    "rooms": 20,
+    "weekend_differential": 25,
+    "rooms_dict": {
+      "Standard": 100,
+      "Queen": 150,
+      "King": 250
+    },
+    "amenity_list": [
+      "Pool",
+      "Gym",
+      "Spa",
+      "Business Office"
+    ]
+  },
+  {
+    "index": 5,
+    "name": "Town Inn Budget Rooms",
+    "rooms": 150,
+    "weekend_differential": 15,
+    "rooms_dict": {
+      "Standard": 25,
+      "Queen": 50,
+      "King": 60
+    },
+    "amenity_list": [
+      "Pool"
+    ]
+  },
+  {
+    "index": 6,
+    "name": "The Comfy Motel Place",
+    "rooms": 50,
+    "weekend_differential": 10,
+    "rooms_dict": {
+      "Standard": 30,
+      "Queen": 50
+    },
+    "amenity_list": []
+  },
+  {
+    "index": 7,
+    "name": "Sun Palace Inn",
+    "rooms": 50,
+    "weekend_differential": 25,
+    "rooms_dict": {
+      "Standard": 40,
+      "Queen": 60,
+      "King": 80
+    },
+    "amenity_list": [
+      "Pool",
+      "Gym"
+    ]
+  },
+  {
+    "index": 8,
+    "name": "HomeAway Inn",
+    "rooms": 30,
+    "weekend_differential": 25,
+    "rooms_dict": {
+      "Standard": 50
+    },
+    "amenity_list": [
+      "Pool",
+      "Business Office"
+    ]
+  },
+  {
+    "index": 9,
+    "name": "Rio Inn",
+    "rooms": 50,
+    "weekend_differential": 25,
+    "rooms_dict": {
+      "Standard": 25,
+      "Queen": 65,
+      "King": 89
+    },
+    "amenity_list": [
+      "Pool"
+    ]
+  }
+>>>>>>> master
 ]

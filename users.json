@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [
   {
     "index": 0,
@@ -59,4 +60,67 @@
     "phone_num": "3058961936",
     "admin_status": false
   }
+=======
+[
+  {
+    "index": 0,
+    "username": "admin",
+    "password": "password",
+    "first_name": "Admin",
+    "last_name": "Account",
+    "email_address": "AdminAccount@gmail.com",
+    "phone_num": "123-465-7839",
+    "admin_status": true
+  },
+  {
+    "index": 2,
+    "username": "stevetestman",
+    "password": "123456",
+    "first_name": "Steve",
+    "last_name": "Testman",
+    "email_address": "stevetestman@gmail.com",
+    "phone_num": "123-456-4324",
+    "admin_status": false
+  },
+  {
+    "index": 3,
+    "username": "stevetestman2",
+    "password": "123423",
+    "first_name": "OtherSteve",
+    "last_name": "Testman",
+    "email_address": "stevetestman@gmail.com",
+    "phone_num": "123-456-4324",
+    "admin_status": false
+  },
+  {
+    "index": 4,
+    "username": "teststeve3",
+    "password": "12353453",
+    "first_name": "ThirdSteve",
+    "last_name": "TestUser",
+    "email_address": "testuser@gmail.com",
+    "phone_num": "123-454-2312",
+    "admin_status": false
+  },
+  {
+    "index": 5,
+    "username": "rogerdodger",
+    "password": "465645645",
+    "first_name": "Roger",
+    "last_name": "TestUser",
+    "email_address": "roger@gmail.com",
+    "phone_num": "123-414-2312",
+    "admin_status": false
+  },
+  {
+    "index": 6,
+    "username": "benjindruzi",
+    "password": "kinshasa",
+    "first_name": "benjamin",
+    "last_name": "ndruzi",
+    "email_address": "benjikialanda@gmail.com",
+    "phone_num": "3058961936",
+    "admin_status": false
+  }
+>>>>>>> master
 ]

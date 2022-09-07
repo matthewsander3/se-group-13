@@ -1,6 +1,10 @@
 .reservations {
+<<<<<<< HEAD
     min-height: 590px;;
     height: auto;
+=======
+    height: 590px;
+>>>>>>> master
 }
 
 .reservations h1 {
