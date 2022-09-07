@@ -1,5 +1,6 @@
 .reservations {
-    height: 590px;
+    min-height: 590px;
+    height: auto;
 }
 
 .reservations h1 {
