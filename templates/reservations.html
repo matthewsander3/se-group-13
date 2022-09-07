@@ -1,0 +1,53 @@
+{% extends "base.html" %} 
+
+{% block title %}View Reservations{% endblock %}
+
+{% block link %}/static/reservations.css{% endblock %}
+
+
+{% block nav %}
+<form method="post" for="backtrack">
+  <input type="submit" id="home" name="home" value="Home">
+  {% if user %}  
+  <input type="submit" id="logout" name="logout" value="Logout">
+  {% else %}  
+  <input type="submit" id="login" name="login" value="Login">
+  {% endif %}  
+</form>
+{% endblock %}
+
+{% block content %}
+
+  <section class="reservations">
+    <h1>Reservations{% if user.admin_status %} (Admin view) {% endif %}</h1>
+
+    <div class="grid-container">
+
+      {% if reservations|length >= 1 %}
+        {% for reservation in reservations %} 
+          <div class="reservation-description">
+            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile">
+            
+            <h5>{% if reservation.is_past %}Past{% else %}Future{% endif %} Reservation - Id: {{ reservation.index }}</h5>
+            <h5>Hotel: {{ reservation.hotel_info.name }}</h5>
+            <h5>Start date: {{ reservation.in_date_string }}</h5>
+            <h5>End date: {{ reservation.out_date_string }}</h5>
+            
+            {% if user.admin_status or not reservation.is_past %}  
+            <form method="post">
+              <input type="submit" id="{{reservation.index}}-cancel" name="{{reservation.index}}-cancel" value = {% if user.admin_status %} "Delete" {% else %} "Cancel" {% endif %}>
+            </form>
+            {%endif%} 
+          </div>
+        {% endfor %}
+
+      {% else %} 
+        <span>You have no reservations - book today!</span>
+
+      {%endif%}
+
+    </div>
+
+  </section>
+
+{% endblock %}

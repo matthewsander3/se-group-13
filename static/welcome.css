@@ -1,0 +1,27 @@
+.welcome {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    top: 0;
+    height: 590px;
+}
+
+.welcome h1 {
+    text-transform: uppercase;
+}
+
+.welcome h3 {
+    margin: 15px 0;
+}
+
+input {
+    font-size: medium;
+    padding: 8px 50px;
+    margin: 18px 10px;
+}
+
+input:hover {
+    background-color: #e2dfdf;
+    cursor: pointer;
+}

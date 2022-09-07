@@ -1,0 +1,34 @@
+.reservation-confirmation {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    height: 590px;
+}
+
+.reservation-confirmation h1 {
+    margin: 1em;
+}
+
+.reservation-confirmation div {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 20%; 
+}
+
+.reservation-confirmation p {
+    display: inline;
+    font-size: medium;
+    margin-left: 5px;
+}
+
+input {
+    padding: 0.5em 4em;
+    margin: 2em 0.5em;
+}
+
+input:hover {
+    background-color: #e2dfdf;
+    cursor: pointer;
+}

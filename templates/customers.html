@@ -1,0 +1,65 @@
+{% extends "base.html" %} 
+
+{% block title %}Customers{% endblock %}
+
+{% block link %}/static/customers.css{% endblock %}
+
+{% block nav %}
+  <form method="post">
+    <input type="submit" id="home" name="home" value="Home">
+    {% if user %}  
+    <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}  
+    <input type="submit" id="login" name="login" value="Login">
+    {% endif %}  
+  </form>
+{% endblock %}
+  
+{% block content %}
+
+  <section class="customers">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <span>{{ message }}</span>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h1>All Customers (Admin Only)</h1>
+
+    <div class="grid-container">
+
+      {% if customers|length >= 1 %}
+        {% for customer in customers %}
+          <div class="customer-description">
+            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile">
+
+            <h5>User: {{ customer.username }} (id = {{ customer.index }})</h5>
+            <h5>Password: {{ customer.password }}</h5>
+            <h5>First Name: {{ customer.first_name }}</h5>
+            <h5>Last Name: {{ customer.last_name }}</h5>
+            <h5>Email: {{ customer.email_address }}</h5>
+            <h5>Phone Number: {{ customer.phone_num }}</h5>
+            <h5>Is {% if not customer.admin_status %}not {% endif %}an admin.</h5>
+
+            <form method="post">
+              <input type="submit" id="{{ customer.index }}-delete" name="{{ customer.index }}-delete" value="Delete Customer">
+            </form>
+          </div>
+        {% endfor %}
+
+      {% else %}
+        <span>
+          No hotels were found with your search criteria.
+          An additional search was attempted with a wider price range,
+          which also returned no results. You may need to adjust your inputs!
+        </span>
+
+      {% endif %}
+
+    </div>
+
+  </section>
+
+{% endblock %}

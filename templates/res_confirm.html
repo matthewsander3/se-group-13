@@ -1,0 +1,39 @@
+{% extends "base.html" %} 
+
+{% block title %}Reservation Confirmation{% endblock %}
+
+{% block link %}/static/res_confirm.css{% endblock %}
+
+{% block nav %}
+<form method="post">
+  <input type="submit" id="home" name="home" value="Home">
+  {% if user %}  
+  <input type="submit" id="logout" name="logout" value="Logout">
+  {% else %}  
+  <input type="submit" id="login" name="login" value="Login">
+  {% endif %}  
+</form>
+{% endblock %}
+
+{% block content %}
+
+  <section class="reservation-confirmation">
+    <h1>Please confirm your Reservation!</h1>
+    
+    <div>
+      <h5>Reservation Id: <p>{{res.index}}</p></h5> 
+      <h5>Hotel: <p>{{res.hotel_info.name}}</p></h5> 
+      <h5>In date: <p>{{res.in_date_string}}</p></h5> 
+      <h5>Out date: <p>{{res.out_date_string}}</p></h5> 
+      <h5>Room type: <p>{{res.room_type_reserved}}</p></h5> 
+      <h5>Num rooms: <p>{{res.num_rooms_reserved}}</p></h5>
+      <h5>Price: <p>${{res.price}}</p></h5> 
+    </div>
+      
+    <form method="post">
+      <input type="submit" id="edit_reservation" name="edit_reservation" value="Edit">
+      <input type="submit" id="confirm_reservation" name="confirm_reservation" value="Confirm">
+    </form>
+  </section>
+  
+{% endblock %}

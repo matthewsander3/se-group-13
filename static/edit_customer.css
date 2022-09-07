@@ -1,0 +1,57 @@
+span {
+    color: red;
+}
+
+.edit-customer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    height: 590px;
+}
+
+.edit-customer h1 {
+    margin: 2em 0;
+}
+
+form p {
+    color: brown;
+    text-align: center;
+}
+
+form .group {
+    display: flex;
+    justify-content: space-between;
+    margin: 1em 0;
+}
+
+form .group div {
+    display: flex;
+    flex-direction: column;
+    margin: 0 2em;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.3em;
+}
+
+input {
+    padding: 5px 15px;
+}
+
+.submission {
+    display: flex;
+    justify-content: center;
+}
+
+#submit {
+    margin: 2em 0;
+    padding: 0.5em 6em;
+    letter-spacing: 1px;
+}
+
+#submit:hover {
+    background-color: #e2dfdf;
+    cursor: pointer;
+}

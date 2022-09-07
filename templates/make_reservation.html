@@ -1,0 +1,58 @@
+{% extends "base.html" %} 
+
+{% block title %}Book Reservation{% endblock %}
+
+{% block link %}/static/make_reservation.css{% endblock %}
+
+{% block nav %}
+<form method="post">
+  <input type="submit" id="home" name="home" value="Home">
+  {% if user %}  
+  <input type="submit" id="logout" name="logout" value="Logout">
+  {% else %}  
+  <input type="submit" id="login" name="login" value="Login">
+  {% endif %}  
+</form>
+{% endblock %}
+
+{% block content %}
+
+  <section class="book-reservation">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <span>{{ message }}</span>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h1>Book your Reservation!</h1>
+
+    <form method="post">
+      <div>
+        <label for="sdate">Check-In Date:</label>
+        <input type="date" id="sdate" name="sdate">
+        
+        <label for="edate">Check-Out Date:</label>
+        <input type="date" id="edate" name="edate">
+      </div>
+      
+      <div>
+        <label for="numRooms">Number of Desired Rooms:</label>
+        <input type="number" id="numRooms" name="numRooms">
+    
+        <label for="">Room Type:</label>    
+        <select id="roomType" name="roomType">
+          {% if hotel.rooms_dict.Standard %} <option value="Standard">Standard</option> {% endif %}
+          {% if hotel.rooms_dict.Queen %} <option value="Queen">Queen</option> {% endif %}
+          {% if hotel.rooms_dict.King %} <option value="King">King</option> {% endif %}
+        </select>
+      </div>
+    
+      <div>
+        <input type="submit" id="submit" value="Submit">
+      </div>
+    </form>
+  </section>
+  
+{% endblock %}

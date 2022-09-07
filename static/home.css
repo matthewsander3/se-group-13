@@ -1,0 +1,35 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+span {
+    color: green;
+}
+
+.user-home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 590px;
+}
+
+.user-home h1 {
+    font-size: 40px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+input {
+    font-size: medium;
+    padding: 2px 20px;
+    margin: 1px 1px;
+}
+
+input:hover {
+    background-color: #e2dfdf;
+    cursor: pointer;
+}

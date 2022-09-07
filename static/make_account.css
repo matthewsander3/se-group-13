@@ -1,0 +1,51 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column  ;
+}
+
+span {
+    color: red;
+}
+
+.form {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(2, 300px);
+    grid-template-rows: repeat(5, 70px);
+    gap: 10px 10px;
+    height: 590px;
+    padding-top: 80px;
+}
+
+.form h2 {
+    letter-spacing: 2px;
+    text-align: center;
+    grid-area: 1 / 1 / span 1 / span 2;
+}
+
+.form > div {    
+    justify-self: center;
+}
+
+label {
+    display: block;
+}
+
+input {
+    padding: 5px 15px;
+}
+
+#submit {
+    padding: 5px 100px;
+    margin-left: 310px;
+    font-size: medium;
+    letter-spacing: 1px;
+}
+
+#submit:hover {
+    background-color: #e2dfdf;
+    cursor: pointer;
+}

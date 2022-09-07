@@ -1,0 +1,40 @@
+{% extends "base.html" %} 
+
+{% block title %}Login{% endblock %}
+
+{% block link %}/static/login.css{% endblock %}
+
+{% block nav %}
+  <form method="post">
+    <input type="submit" id="home" name="home" value="Home">
+    {% if user %}
+    <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}
+    <input type="submit" id="login" name="login" value="Login">
+    {% endif %}
+  </form>
+{% endblock %}
+
+{% block content %}
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <span>{{ message }}</span>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" class="form">
+    <h2>Login</h2>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username">
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password">
+
+    <input type="submit" id="submit" value="Login">
+  </form>
+  
+{% endblock %}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/base.css">
+    <link rel="stylesheet" type="text/css" href="{% block link %}{% endblock %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+    <header>
+      <h2>General Eric's Hotels</h2>
+      <nav>
+        {% block nav %}
+        {% endblock %}
+      </nav>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <footer>
+        <p>We hope to see you again! <span style="font-size: 20px; color: red;">&hearts;</span></p>
+        <ul>
+          <p>&copy; Created by</p>
+          <li>Benjamin Ndruzi</li>
+          <li>Kyler Melbert</li>
+          <li>Matthew Sander</li>
+        </ul>
+      </footer>
+    </body>
+  
+</html>

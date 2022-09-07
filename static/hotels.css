@@ -1,0 +1,91 @@
+span {
+    color: red;
+}
+
+.view-hotels {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 590px;
+    height: auto;
+}
+
+.view-hotels h1 {
+    margin: 1em;
+}
+
+.hotel-box {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: row;
+    border: solid black;
+    border-width: 0.5px;
+    border-radius: 5px;
+    width: 830px;
+    height: auto;
+    max-width: fit-content;
+    min-height: fit-content;
+    margin: 0.5em 0;
+    overflow: auto;
+}
+
+.hotel-box img {
+    max-width: 30%;
+    max-height: 100%;
+}
+
+.hotel-description {
+    margin-left: 2%;
+}
+
+.hotel-description h3 {
+    margin-top: 0.5em;
+}
+
+.hotel-description div {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+h5 {
+    font-size: 12px;
+}
+
+h5 p {
+    font-size: 15px;
+}
+
+hr {
+    margin: 0.5em 0;
+    opacity: 0.5;
+}
+
+.group3 {
+    margin-bottom: 0.5em;
+}
+
+.hotel-description h5 {
+    margin: 0 1em;
+}
+
+.submission {
+    margin: auto 0.5em 0.3em auto; 
+    width: 20%
+}
+
+.submission input {
+    display: block;
+    cursor: pointer;
+    letter-spacing: 1px;
+    width: 100%;
+    margin: 0.3em 0;
+    padding: 0.5em;
+}
+
+input:hover {
+    background-color: #e2dfdf;
+    cursor: pointer;
+}

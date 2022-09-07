@@ -1,0 +1,23 @@
+{% extends "base.html" %} 
+
+{% block title %}Home Page{% endblock %}
+
+{% block link %}/static/welcome.css{% endblock %}
+
+{% block nav%}
+<form method="post" enctype="application/json">
+  <input type="submit" id="login" name="login" value="Login">
+  <input type="submit" id="register" name="register" value="Register">
+</form>
+{% endblock %}
+
+{% block content %}
+  <section class="welcome">
+    <h1>Welcome to General Eric's Hotels</h1>
+    <h3>Login or Create an Account.</h3>
+    <form method="post">
+      <input type="submit" id="login" name="login" value="Login">
+      <input type="submit" id="register" name="register" value="Register">
+    </form>
+  </section>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %} 
+
+{% block title %}Edit Customer{% endblock %}
+
+{% block link %}/static/edit_customer.css{% endblock %}
+
+{% block nav %}
+  <form method="post">
+    <input type="submit" id="home" name="home" value="Home">
+    {% if user %}  
+    <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}  
+    <input type="submit" id="login" name="login" value="Login">
+    {% endif %}  
+  </form>
+{% endblock %}
+
+
+{% block content %}
+
+  <section class="edit-customer">
+    <h1>Edit User</h1>
+
+    {% if user and customer %}
+    <form method="post">
+      {% if customer.admin_status %}
+        <p>This user is an admin.</p>
+      {% endif %}
+
+      <div class="group">
+        <div>
+          <label for="username">Username: </label>
+          <input type="text" id="username" name="username" value="{{customer.username}}">
+        </div>    
+        <div>
+          <label for="password">Password: </label>
+          <input type="text" id="password" name="password" value="{{customer.password}}">
+        </div>
+      </div>
+
+      <div class="group">
+        <div>
+          <label for="fname">First Name: </label>
+          <input type="text" id="fname" name="fname" value="{{customer.first_name}}">
+        </div>       
+        <div>
+          <label for="lname">Last Name: </label>
+          <input type="text" id="lname" name="lname" value="{{customer.last_name}}">
+        </div>
+      </div>
+      
+      <div class="group">
+        <div>
+          <label for="email">Email Name: </label> 
+          <input type="email" id="email" name="email" value="{{customer.email_address}}">
+        </div>       
+        <div>
+          <label for="phone_num">Phone Number: </label>
+          <input type="tel" id="phone_num" name="phone_num" value="{{customer.phone_num}}">
+        </div>
+      </div>  
+      
+      <div class="submission">
+        <input type="submit" id="submit" value="Submit">
+      </div>
+    
+    </form>
+
+    {% else %}
+      <span>No user was found at this index</span>
+    {% endif %}
+
+  </section>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %} 
+
+{% block title %}Home{% endblock %}
+
+{% block link %}/static/home.css{% endblock %}
+
+{% block nav %}
+  <form method="post">
+    <input type="submit" id="home" name="home" value="Home">
+    {% if user %}  
+    <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}  
+    <input type="submit" id="login" name="login" value="Login">
+    {% endif %}  
+  </form>
+{% endblock %}
+
+
+{% block content %}
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <span>{{ message }}</span>
+      {% endfor %}
+    {% endif %}
+  {% endwith %} 
+    
+  <section class="user-home">
+    <h1>Welcome, {{user.username}}! {% if user.admin_status %} (Admin view) {% endif %} &#128075</h1> 
+  
+    <form method="post" for="proceed">
+      <input type="submit" id="viewhotels" name="viewhotels" value="View Hotels">
+      <input type="submit" id="searchhotels" name="searchhotels" value="Search Hotels">
+      <input type="submit" id="viewreservations" name="viewreservations" value="View Reservations">
+      <input type="submit" id="editaccount" name="editaccount" value="View / Edit Account">
+      {% if user.admin_status %} 
+      <input type="submit" id="customers" name="customers" value="Customers">
+      {% endif %} 
+    </form>
+  </section> 
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %} 
+
+{% block title %}Edit Hotel{% endblock %}
+
+{% block link %}/static/edit_hotel.css{% endblock %}
+
+{% block nav %}
+  <form method="post">
+    <input type="submit" id="home" name="home" value="Home">
+    {% if user %}  
+    <input type="submit" id="logout" name="logout" value="Logout">
+    {% else %}  
+    <input type="submit" id="login" name="login" value="Login">
+    {% endif %}  
+  </form>
+{% endblock %}
+  
+{% block content %}
+
+  <section class="edit-hotel">
+
+    <h1>Edit Hotel</h1>
+
+    {% if hotel %}
+    <form method="post">
+
+      <div class="group">
+        <div>
+          <label>Hotel Name: </label>
+          <input type="text" id="new_name" name="new_name" value="{{hotel.name}}">
+        </div>
+        <div>
+          <label>Max number of rooms: </label>
+          <input type="number" id="new_num_rooms" name="new_num_rooms" value="{{hotel.rooms}}">
+        </div>
+      </div>
+
+      <div class="group">
+        <div>
+          <label>Weekend Diff: $</label>
+          <input type="number" id="new_weekend_diff" name="new_weekend_diff" value="{{hotel.weekend_differential}}">
+        </div> 
+        <div>
+          <label>Standard room: $</label>
+          <input type="number" id="standard_cost" name="standard_cost" value="{{hotel.rooms_dict.Standard}}">
+        </div>
+      </div>
+     
+      <div class="group">
+        <div>
+          <label>Queen rooms: $</label>
+          <input type="number" id="queen_cost" name="queen_cost" value="{{hotel.rooms_dict.Queen}}">
+        </div>
+        <div>
+          <label>King rooms: $</label>
+          <input type="number" id="king_cost" name="king_cost" value="{{hotel.rooms_dict.King}}">
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Amenities?</legend>
+
+        <input type="checkbox" id="pool_status" name="pool_status" value="Pool" {% if "Pool" in hotel.amenity_list %} checked {% endif %}>
+        <label for="pool_status">Pool</label>
+
+        <input type="checkbox" id="gym_status" name="gym_status" value="Gym" {% if "Gym" in hotel.amenity_list %} checked {% endif %}>
+        <label for="gym_status">Gym</label>
+
+        <input type="checkbox" id="spa_status" name="spa_status" value="Spa"  {% if "Spa" in hotel.amenity_list %} checked {% endif %}>
+        <label for="spa_status">Spa</label>
+
+        <input type="checkbox" id="office_status" name="office_status" value="Office" {% if "Business Office" in hotel.amenity_list %} checked {% endif %}>
+        <label for="office_status">Office</label>
+      </fieldset>
+
+      <div class="submission">
+        <input type="submit" id="submit" value="Submit">
+      </div>
+      
+    </form>
+
+    {% else %}
+      <span>No hotel was found at this index.</span>
+    {% endif %}
+
+  </section>
+
+{% endblock %}
